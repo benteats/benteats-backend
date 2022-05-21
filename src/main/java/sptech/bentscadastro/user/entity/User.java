@@ -15,6 +15,8 @@ public class User {
     @NotBlank
     public String name;
     @NotBlank
+    public String userType;
+    @NotBlank
     @Pattern(regexp = "^[^\\s@]+@[^\\s@]+\\.[^\\s@]{2,}$", message = "E-mail inválido")
     public String email;
     @NotBlank
@@ -153,5 +155,13 @@ public class User {
 
     public void setLogged(Boolean logged) {
         isLogged = logged;
+    }
+
+    public String getUserType() {
+        return userType;
+    }
+
+    public void setUserType(String userType) {
+        this.userType = userType;
     }
 }

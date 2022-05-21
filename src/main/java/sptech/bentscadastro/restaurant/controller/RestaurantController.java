@@ -29,9 +29,9 @@ public class RestaurantController {
         if(userRepository.existsById(idUser)) {
             User restaurantUser = userRepository.findByIdUser(idUser);
             newRestaurant.setUser(restaurantUser);
+            restaurantRepository.save(newRestaurant);
             return ResponseEntity.status(201).build();
         }
-
         return ResponseEntity.status(404).build();
     }
 

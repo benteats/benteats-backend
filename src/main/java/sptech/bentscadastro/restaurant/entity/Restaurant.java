@@ -7,12 +7,11 @@ import javax.validation.constraints.NotNull;
 import java.util.Optional;
 
 @Entity
+@Table(name ="tb_restaurant")
 public class Restaurant {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idRestaurant;
-
     @NotNull
     private String foodType;
     private String priceAverage;
@@ -23,6 +22,7 @@ public class Restaurant {
     @NotNull
     private String description;
     @ManyToOne
+    @JoinColumn(name = "idUser", referencedColumnName = "idUser", nullable = false)
     private User user;
 
     private String imgUrl;
