@@ -25,6 +25,8 @@ public class Restaurant {
     @ManyToOne
     private User user;
 
+    private String imgUrl;
+
     public Integer getIdRestaurant() {
         return idRestaurant;
     }
@@ -79,5 +81,13 @@ public class Restaurant {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
     }
 }
