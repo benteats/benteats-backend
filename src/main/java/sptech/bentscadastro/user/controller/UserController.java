@@ -22,7 +22,7 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity resgisterUser(@RequestBody User newUser) {
-        System.out.println(newUser.getEmail());
+        System.out.println(newUser.getIdUser());
         userRepository.save(newUser);
         return ResponseEntity.status(201).build();
     }
