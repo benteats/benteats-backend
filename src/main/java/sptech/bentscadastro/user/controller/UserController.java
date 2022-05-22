@@ -2,6 +2,7 @@ package sptech.bentscadastro.user.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import sptech.bentscadastro.user.entity.User;
 import sptech.bentscadastro.user.form.LoginUserForm;
@@ -10,7 +11,9 @@ import sptech.bentscadastro.user.repository.UserRepository;
 import sptech.bentscadastro.util.formatt.FormattPhone;
 
 import javax.validation.Valid;
+import java.text.ParseException;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -20,8 +23,12 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private PasswordEncoder encoder;
+
     @PostMapping
     public ResponseEntity resgisterUser(@RequestBody User newUser) {
+        newUser.setPassword(encoder.encode(newUser.getPassword()));
         userRepository.save(newUser);
         return ResponseEntity.status(201).build();
     }
@@ -110,22 +117,28 @@ public class UserController {
 
     @PostMapping("/loginUser")
     public ResponseEntity loginUser(@RequestBody LoginUserForm loginUser) {
-        if (userRepository.existsByEmailAndPassword(loginUser.getLogin(), loginUser.getPassword())) {
-            userRepository.loginUser(loginUser.getLogin(), loginUser.getPassword());
-            Integer idUser = userRepository.getIdUser(loginUser.getLogin());
-            return ResponseEntity.status(200).body(idUser);
+        if (userRepository.existsByEmail(loginUser.getLogin())) {
+            Optional<User> user = userRepository.findByEmail(loginUser.getLogin());
+            if (encoder.matches(loginUser.getPassword(), user.orElse(new User()).getPassword())) {
+                userRepository.loginUser(loginUser.getLogin());
+                Integer idUser = userRepository.getIdUser(loginUser.getLogin());
+                return ResponseEntity.status(200).body(idUser);
+            }
         }
 
         try {
             loginUser.setLogin(FormattPhone.formattPhone(loginUser.getLogin()));
-        } catch (java.text.ParseException e) {
+        } catch (ParseException e) {
             e.printStackTrace();
         }
 
-        if (userRepository.existsByPhoneAndPassword(loginUser.getLogin(), loginUser.getPassword())) {
-            userRepository.loginUser(loginUser.getLogin(), loginUser.getPassword());
-            Integer idUser = userRepository.getIdUser(loginUser.getLogin());
-            return ResponseEntity.status(200).body(idUser);
+        if (userRepository.existsByPhone(loginUser.getLogin())) {
+            User user = userRepository.findByPhone(loginUser.getLogin());
+            if (encoder.matches(loginUser.getPassword(), user.getPassword())) {
+                userRepository.loginUser(loginUser.getLogin());
+                Integer idUser = userRepository.getIdUser(loginUser.getLogin());
+                return ResponseEntity.status(200).body(idUser);
+            }
         }
 
         return ResponseEntity.status(404).build();
