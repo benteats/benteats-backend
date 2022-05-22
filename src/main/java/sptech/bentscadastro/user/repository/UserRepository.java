@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import sptech.bentscadastro.user.entity.User;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
 
@@ -70,8 +71,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     @Transactional
     @Modifying
-    @Query("update User u set u.isLogged = true where u.email = ?1 or u.phone = ?1 and u.password = ?2")
-    void loginUser(String login, String password);
+    @Query("update User u set u.isLogged = true where u.email = ?1 or u.phone = ?1")
+    void loginUser(String login);
 
     @Transactional
     @Modifying
@@ -86,4 +87,14 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     boolean existsByIdUserAndIsLoggedFalse(Integer idUser);
 
     User findByIdUser(Integer idUser);
+
+    boolean existsByEmail(String login);
+
+    boolean existsByPhone(String login);
+
+//    User findByEmail(String login);
+
+    User findByPhone(String login);
+
+    Optional<User> findByEmail(String username);
 }
