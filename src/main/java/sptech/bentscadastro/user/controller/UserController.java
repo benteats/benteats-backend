@@ -26,7 +26,7 @@ public class UserController {
     @Autowired
     private PasswordEncoder encoder;
 
-    @PostMapping
+    @PostMapping("/registerUser")
     public ResponseEntity resgisterUser(@RequestBody User newUser) {
         newUser.setPassword(encoder.encode(newUser.getPassword()));
         userRepository.save(newUser);
