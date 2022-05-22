@@ -22,7 +22,6 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity resgisterUser(@RequestBody User newUser) {
-        System.out.println(newUser.getIdUser());
         userRepository.save(newUser);
         return ResponseEntity.status(201).build();
     }
@@ -33,7 +32,6 @@ public class UserController {
         if (users.isEmpty()) {
             return ResponseEntity.status(204).build();
         }
-        System.out.println(users);
         return ResponseEntity.status(200).body(users);
     }
 
