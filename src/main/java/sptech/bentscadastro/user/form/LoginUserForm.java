@@ -11,8 +11,6 @@ public class LoginUserForm {
     @Pattern(regexp = "^(?=.*[0-9]{3})(?=.*[A-z]{1})[A-z0-9]{6,}$", message = "Senha inválida")
     private String password;
 
-
-
     public String getLogin() {
         return login;
     }

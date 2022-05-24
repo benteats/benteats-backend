@@ -10,7 +10,7 @@ public class UpdateUserForm {
     private String city;
     private String district;
     private String address;
-    private Integer addressNumber;
+    private String addressNumber;
     private String lat;
     private String lng;
 
@@ -86,11 +86,11 @@ public class UpdateUserForm {
         this.address = address;
     }
 
-    public Integer getAddressNumber() {
+    public String getAddressNumber() {
         return addressNumber;
     }
 
-    public void setAddressNumber(Integer addressNumber) {
+    public void setAddressNumber(String addressNumber) {
         this.addressNumber = addressNumber;
     }
 

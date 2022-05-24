@@ -20,11 +20,9 @@ public class User {
     @Pattern(regexp = "^[^\\s@]+@[^\\s@]+\\.[^\\s@]{2,}$", message = "E-mail inválido")
     public String email;
     @NotBlank
-    @Pattern(regexp = "^\\([1-9]{2}\\) (?:[2-8]|9[1-9])[0-9]{3}\\-[0-9]{4}$" ,
-            message = "Informe um telefone válido com ou sem DDD")
+    @Pattern(regexp = "^\\([1-9]{2}\\) (?:[2-8]|9[1-9])[0-9]{3}\\-[0-9]{4}$", message = "Informe um telefone válido com ou sem DDD")
     public String phone;
     @NotBlank
-    @Pattern(regexp = "^(?=.*[0-9]{3})(?=.*[A-z]{1})[A-z0-9]{6,}$", message = "Senha inválida")
     public String password;
     @NotNull
     public Float lat;
@@ -42,7 +40,7 @@ public class User {
     @NotBlank
     public String address;
     @NotNull
-    public Integer addressNumber;
+    public String addressNumber;
     public Boolean isLogged;
 
     public Integer getIdUser() {
@@ -141,11 +139,11 @@ public class User {
         this.address = address;
     }
 
-    public Integer getAddressNumber() {
+    public String getAddressNumber() {
         return addressNumber;
     }
 
-    public void setAddressNumber(Integer addressNumber) {
+    public void setAddressNumber(String addressNumber) {
         this.addressNumber = addressNumber;
     }
 

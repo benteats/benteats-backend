@@ -53,7 +53,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Transactional
     @Modifying
     @Query("update User u set u.addressNumber = ?1 where u.idUser = ?2")
-    void updateAddressNumberUserById(Integer value, Integer idUser);
+    void updateAddressNumberUserById(String value, Integer idUser);
 
     @Transactional
     @Modifying
