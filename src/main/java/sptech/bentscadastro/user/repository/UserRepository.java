@@ -83,6 +83,10 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query("select u.idUser from User u where u.email = ?1 or u.phone = ?1")
     Integer getIdUser(String login);
 
+//    @Transactional
+//    @Query("select u.phone from User u where u.idUser = ?1")
+//    Integer getPhoneUserById(Long id);
+
     boolean existsByIdUserAndIsLoggedTrue(Integer idUser);
     boolean existsByIdUserAndIsLoggedFalse(Integer idUser);
 
@@ -94,7 +98,9 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
 //    User findByEmail(String login);
 
-    User findByPhone(String login);
+//    User findByPhone(String login);
 
     Optional<User> findByEmail(String username);
+
+    Optional<User> findByPhone(String username);
 }

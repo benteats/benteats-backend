@@ -3,6 +3,7 @@ package sptech.bentscadastro.user.security;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -10,12 +11,15 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import sptech.bentscadastro.user.data.UserDetailData;
 import sptech.bentscadastro.user.entity.User;
+import sptech.bentscadastro.user.repository.UserRepository;
+import sptech.bentscadastro.util.formatt.FormattPhone;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -31,13 +35,14 @@ public class JWTAuthenticateFilter extends UsernamePasswordAuthenticationFilter 
         this.authenticationManager = authenticationManager;
     }
 
+    @Autowired
+    private UserRepository userRepository;
+
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         try {
             User user = new ObjectMapper().readValue(request.getInputStream(), User.class);
-            return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                    user.getEmail(), user.getPassword(), new ArrayList<>()
-            ));
+            return this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword(), new ArrayList()));
         } catch (IOException e) {
             throw new RuntimeException("Falha ao autenticar o usuário", e);
         }

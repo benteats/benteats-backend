@@ -5,10 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import sptech.bentscadastro.user.entity.User;
-import sptech.bentscadastro.user.form.LoginUserForm;
 import sptech.bentscadastro.user.form.UpdateUserForm;
 import sptech.bentscadastro.user.repository.UserRepository;
-import sptech.bentscadastro.util.formatt.FormattPhone;
 
 import javax.validation.Valid;
 import java.text.ParseException;
@@ -110,35 +108,6 @@ public class UserController {
         if (userRepository.existsById(idUser)) {
             userRepository.deleteById(idUser);
             return ResponseEntity.status(200).build();
-        }
-
-        return ResponseEntity.status(404).build();
-    }
-
-    @PostMapping("/loginUser")
-    public ResponseEntity loginUser(@RequestBody LoginUserForm loginUser) {
-        if (userRepository.existsByEmail(loginUser.getLogin())) {
-            Optional<User> user = userRepository.findByEmail(loginUser.getLogin());
-            if (encoder.matches(loginUser.getPassword(), user.orElse(new User()).getPassword())) {
-                userRepository.loginUser(loginUser.getLogin());
-                Integer idUser = userRepository.getIdUser(loginUser.getLogin());
-                return ResponseEntity.status(200).body(idUser);
-            }
-        }
-
-        try {
-            loginUser.setLogin(FormattPhone.formattPhone(loginUser.getLogin()));
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        if (userRepository.existsByPhone(loginUser.getLogin())) {
-            User user = userRepository.findByPhone(loginUser.getLogin());
-            if (encoder.matches(loginUser.getPassword(), user.getPassword())) {
-                userRepository.loginUser(loginUser.getLogin());
-                Integer idUser = userRepository.getIdUser(loginUser.getLogin());
-                return ResponseEntity.status(200).body(idUser);
-            }
         }
 
         return ResponseEntity.status(404).build();
