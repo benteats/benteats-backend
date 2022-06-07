@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sptech.bentscadastro.restaurant.DTO.RestaurantDetailDTO;
 import sptech.bentscadastro.restaurant.entity.Restaurant;
+import sptech.bentscadastro.restaurant.form.ImgUrl;
 import sptech.bentscadastro.restaurant.form.RestaurantUpdateForm;
 import sptech.bentscadastro.restaurant.repository.RestaurantRepository;
 import sptech.bentscadastro.user.entity.User;
@@ -94,11 +95,11 @@ public class RestaurantController {
         }
         return ResponseEntity.status(200).body(restaurants);
     }
-    @PostMapping("/registerImgUrl/{idRestaurant}/{imgUrl}")
-    public ResponseEntity registerImgUrl(@PathVariable Integer idRestaurant, @PathVariable String imgUrl) {
+    @PostMapping("/registerImgUrl/{idRestaurant}")
+    public ResponseEntity registerImgUrl(@RequestBody ImgUrl imgUrl, @PathVariable Integer idRestaurant) {
         if (restaurantRepository.existsById(idRestaurant)) {
             Restaurant restaurant = restaurantRepository.getById(idRestaurant);
-            restaurant.setImgUrl(imgUrl);
+            restaurant.setImgUrl(imgUrl.getImgUrl());
             restaurantRepository.save(restaurant);
             return ResponseEntity.status(200).build();
         }
@@ -109,10 +110,20 @@ public class RestaurantController {
     @GetMapping("/getImgUrlByIdRestaurant/{idRestaurant}")
     public ResponseEntity<String> getImgUrlByIdRestaurant(@PathVariable Integer idResturant) {
         if (restaurantRepository.existsById(idResturant)) {
-            Restaurant restaurant = restaurantRepository.getById(idResturant);
-            return ResponseEntity.status(200).body(restaurant.getImgUrl());
+            Optional<Restaurant> restaurant = restaurantRepository.findById(idResturant);
+            return ResponseEntity.status(200).body(restaurant.get().getImgUrl());
         }
-        
+
+        return ResponseEntity.status(404).build();
+    }
+
+    @GetMapping("/getRestaurantById/{idRestaurant}")
+    public ResponseEntity<Optional<Restaurant>> getRestaurantById(@PathVariable Integer idRestaurant) {
+        if (restaurantRepository.existsById(idRestaurant)) {
+            Optional<Restaurant> restaurant = restaurantRepository.findById(idRestaurant);
+            return ResponseEntity.status(200).body(restaurant);
+        }
+
         return ResponseEntity.status(404).build();
     }
 }
