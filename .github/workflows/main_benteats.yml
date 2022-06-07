@@ -49,5 +49,5 @@ jobs:
         with:
           app-name: 'benteats'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_1D826DEBAE5D490E9F89C0D066D673CF }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_2CF203946C18462AA24609946AE48C7D }}
           package: '*.jar'
