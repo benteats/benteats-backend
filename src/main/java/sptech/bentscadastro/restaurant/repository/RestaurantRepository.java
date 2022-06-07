@@ -51,7 +51,8 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
 
     String HAVERSINE_FORMULA = "(6371 * acos(cos(radians(:lat)) * cos(radians(r.user.lat)) *" +
             " cos(radians(r.user.lng) - radians(:lng)) + sin(radians(:lat)) * sin(radians(r.user.lat))))";
-    @Query("SELECT r.user.name as name," +
+    @Query("SELECT r.idRestaurant as id," +
+            "r.user.name as name," +
             "r.user.address as address," +
             "r.user.addressNumber as addressNumber," +
             "r.foodType as foodType," +

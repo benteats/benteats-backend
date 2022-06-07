@@ -1,6 +1,8 @@
 package sptech.bentscadastro.restaurant.DTO;
 
 public interface RestaurantDetailDTO {
+    Integer getId();
+
     String getName();
 
     String getAddress();

@@ -25,7 +25,7 @@ import java.util.Date;
 
 public class JWTAuthenticateFilter extends UsernamePasswordAuthenticationFilter {
 
-    public static final int TOKEN_EXPIRATION = 600_000;
+    public static final int TOKEN_EXPIRATION = 6000_000;
 
     public static final String TOKEN_PASSWORD = "28a6bc4f-d123-4781-afee-a33bd7965d4b";
 
