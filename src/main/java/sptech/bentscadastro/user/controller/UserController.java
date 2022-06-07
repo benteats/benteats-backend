@@ -1,7 +1,9 @@
 package sptech.bentscadastro.user.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import sptech.bentscadastro.user.entity.User;
@@ -21,12 +23,16 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private PasswordEncoder encoder;
+
+    @Bean
+    public PasswordEncoder getPasswordEncoder() {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        return encoder;
+    }
 
     @PostMapping("/registerUser")
-    public ResponseEntity resgisterUser(@RequestBody User newUser) {
-        newUser.setPassword(encoder.encode(newUser.getPassword()));
+    public ResponseEntity<Void> resgisterUser(@RequestBody @Valid User newUser) {
+        newUser.setPassword(getPasswordEncoder().encode(newUser.getPassword()));
         userRepository.save(newUser);
         return ResponseEntity.status(201).build();
     }
@@ -42,65 +48,54 @@ public class UserController {
 
     @PatchMapping("/updateUserById/{idUser}")
     public ResponseEntity updateUserById(@PathVariable Integer idUser, @RequestBody UpdateUserForm updateUser) {
-        ResponseEntity result = ResponseEntity.status(404).build();
         if (userRepository.existsById(idUser)) {
 
             if (updateUser.getName() != null && !updateUser.getName().equals("")) {
                 userRepository.updateNameUserById(updateUser.getName(), idUser);
-                result = ResponseEntity.status(200).build();
             }
 
             if (updateUser.getEmail() != null && !updateUser.getEmail().equals("")) {
                 userRepository.updateEmailUserById(updateUser.getEmail(), idUser);
-                result = ResponseEntity.status(200).build();
             }
 
             if (updateUser.getPhone() != null && !updateUser.getPhone().equals("")) {
                 userRepository.updatePhoneUserById(updateUser.getPhone(), idUser);
-                result = ResponseEntity.status(200).build();
             }
 
             if (updateUser.getCep() != null && !updateUser.getCep().equals("")) {
                 userRepository.updateCepUserById(updateUser.getCep(), idUser);
-                result = ResponseEntity.status(200).build();
             }
 
             if (updateUser.getState() != null && !updateUser.getState().equals("")) {
                 userRepository.updateStateUserById(updateUser.getState(), idUser);
-                result = ResponseEntity.status(200).build();
             }
 
             if (updateUser.getCity() != null && !updateUser.getCity().equals("")) {
                 userRepository.updateCityUserById(updateUser.getCity(), idUser);
-                result = ResponseEntity.status(200).build();
             }
 
             if (updateUser.getDistrict() != null && !updateUser.getDistrict().equals("")) {
                 userRepository.updateDistrictUserById(updateUser.getDistrict(), idUser);
-                result = ResponseEntity.status(200).build();
             }
 
             if (updateUser.getAddress() != null && !updateUser.getAddress().equals("")) {
                 userRepository.updateAddressUserById(updateUser.getAddress(), idUser);
-                result = ResponseEntity.status(200).build();
             }
 
             if (updateUser.getAddressNumber() != null) {
                 userRepository.updateAddressNumberUserById(updateUser.getAddressNumber(), idUser);
-                result = ResponseEntity.status(200).build();
             }
 
             if (updateUser.getLat() != null && !updateUser.getLat().equals("")) {
                 userRepository.updateLatUserById(updateUser.getLat(), idUser);
-                result = ResponseEntity.status(200).build();
             }
 
             if (updateUser.getLng() != null && !updateUser.getLng().equals("")) {
                 userRepository.updateLatUserById(updateUser.getLng(), idUser);
-                result = ResponseEntity.status(200).build();
             }
+            return ResponseEntity.status(200).build();
         }
-        return result;
+        return ResponseEntity.status(404).build();
     }
 
     @DeleteMapping("/{idUser}")
@@ -113,6 +108,7 @@ public class UserController {
         return ResponseEntity.status(404).build();
     }
 
+    @DeleteMapping("/logOffUser/{idUser}")
     public ResponseEntity logOffUser(@PathVariable Integer idUser) {
         if (userRepository.existsById(idUser)) {
             if (userRepository.existsByIdUserAndIsLoggedTrue(idUser)) {
@@ -120,8 +116,7 @@ public class UserController {
                 return ResponseEntity.status(200).build();
             }
 
-            if (userRepository.existsByIdUserAndIsLoggedFalse(idUser))
-                return ResponseEntity.status(406).build();
+            return ResponseEntity.status(406).build();
         }
 
         return ResponseEntity.status(404).build();

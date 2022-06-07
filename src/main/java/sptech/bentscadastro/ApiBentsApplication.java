@@ -14,10 +14,4 @@ public class ApiBentsApplication {
 		SpringApplication.run(ApiBentsApplication.class, args);
 	}
 
-	@Bean
-	public PasswordEncoder getPasswordEncoder() {
-		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-		return encoder;
-	}
-
 }
