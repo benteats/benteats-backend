@@ -3,6 +3,7 @@ package sptech.bentscadastro.restaurant.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import sptech.bentscadastro.data.estructure.Queue;
 import sptech.bentscadastro.restaurant.DTO.RestaurantDetailDTO;
 import sptech.bentscadastro.restaurant.entity.Restaurant;
 import sptech.bentscadastro.restaurant.form.ImgUrl;
@@ -18,6 +19,8 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/restaurants")
 public class RestaurantController {
+
+    Queue queueImg = new Queue(5);
 
     @Autowired
     private RestaurantRepository restaurantRepository;
@@ -114,6 +117,30 @@ public class RestaurantController {
             return ResponseEntity.status(200).body(restaurant.get().getImgUrl());
         }
 
+        return ResponseEntity.status(404).build();
+    }
+
+    @PostMapping("/registerImgInQueue/{idRestaurant}")
+    public ResponseEntity registerImgInQueue(@RequestBody ImgUrl imgUrl, @PathVariable Integer idRestaurant) {
+        if (restaurantRepository.existsById(idRestaurant)) {
+            queueImg.insert(imgUrl);
+            return ResponseEntity.status(200).build();
+        }
+        return ResponseEntity.status(404).build();
+    }
+
+    @PostMapping("/executeImgQueue/{idRestaurant}")
+    public ResponseEntity executeImgQueue(@RequestBody ImgUrl imgUrl, @PathVariable Integer idRestaurant) {
+        if (restaurantRepository.existsById(idRestaurant)) {
+            Restaurant restaurant = restaurantRepository.getById(idRestaurant);
+            for (int i = 0; i < queueImg.queueSize(); i++) {
+                restaurant.setImgUrl(queueImg.poll().toString());
+                restaurantRepository.save(restaurant);
+            }
+            queueImg.clearQueue();
+            imgUrl.setSize(0);
+            return ResponseEntity.status(200).build();
+        }
         return ResponseEntity.status(404).build();
     }
 
