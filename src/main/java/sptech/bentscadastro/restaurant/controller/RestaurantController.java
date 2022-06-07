@@ -94,5 +94,25 @@ public class RestaurantController {
         }
         return ResponseEntity.status(200).body(restaurants);
     }
+    @PostMapping("/registerImgUrl/{idRestaurant}/{imgUrl}")
+    public ResponseEntity registerImgUrl(@PathVariable Integer idRestaurant, @PathVariable String imgUrl) {
+        if (restaurantRepository.existsById(idRestaurant)) {
+            Restaurant restaurant = restaurantRepository.getById(idRestaurant);
+            restaurant.setImgUrl(imgUrl);
+            restaurantRepository.save(restaurant);
+            return ResponseEntity.status(200).build();
+        }
 
+        return ResponseEntity.status(404).build();
+    }
+
+    @GetMapping("/getImgUrlByIdRestaurant/{idRestaurant}")
+    public ResponseEntity<String> getImgUrlByIdRestaurant(@PathVariable Integer idResturant) {
+        if (restaurantRepository.existsById(idResturant)) {
+            Restaurant restaurant = restaurantRepository.getById(idResturant);
+            return ResponseEntity.status(200).body(restaurant.getImgUrl());
+        }
+        
+        return ResponseEntity.status(404).build();
+    }
 }
