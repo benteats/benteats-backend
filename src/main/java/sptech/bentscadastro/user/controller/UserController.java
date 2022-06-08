@@ -23,7 +23,6 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
-
     @Bean
     public PasswordEncoder getPasswordEncoder() {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
@@ -121,21 +120,4 @@ public class UserController {
 
         return ResponseEntity.status(404).build();
     }
-
-    @GetMapping("/authenticateSession/{idUser}")
-    public ResponseEntity<Boolean> authenticateSession(@PathVariable Integer idUser) {
-
-        if (userRepository.existsById(idUser)) {
-            if (userRepository.existsByIdUserAndIsLoggedTrue(idUser)) {
-                return ResponseEntity.status(200).body(true);
-            }
-
-            if (userRepository.existsByIdUserAndIsLoggedFalse(idUser)) {
-                return ResponseEntity.status(200).body(false);
-            }
-        }
-
-        return ResponseEntity.status(404).build();
-    }
-
 }

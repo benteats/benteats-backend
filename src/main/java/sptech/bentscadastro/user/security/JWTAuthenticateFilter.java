@@ -12,20 +12,18 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import sptech.bentscadastro.user.data.UserDetailData;
 import sptech.bentscadastro.user.entity.User;
 import sptech.bentscadastro.user.repository.UserRepository;
-import sptech.bentscadastro.util.formatt.FormattPhone;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 
 public class JWTAuthenticateFilter extends UsernamePasswordAuthenticationFilter {
 
-    public static final int TOKEN_EXPIRATION = 600_000;
+    public static final int TOKEN_EXPIRATION = 860_000_000;
 
     public static final String TOKEN_PASSWORD = "28a6bc4f-d123-4781-afee-a33bd7965d4b";
 
@@ -57,7 +55,9 @@ public class JWTAuthenticateFilter extends UsernamePasswordAuthenticationFilter 
                 .withExpiresAt(new Date(System.currentTimeMillis() + TOKEN_EXPIRATION))
                 .sign(Algorithm.HMAC512(TOKEN_PASSWORD));
 
-        response.getWriter().write(token);
+        String body = userDetailData.getUserType() + " " + token;
+
+        response.getWriter().write(body);
         response.getWriter().flush();
     }
 }

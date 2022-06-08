@@ -21,6 +21,10 @@ public class UserDetailData implements UserDetails {
         return new ArrayList<>();
     }
 
+    public String getUserType() {
+        return user.orElse(new User()).getUserType();
+    }
+
     @Override
     public String getPassword() {
         return user.orElse(new User()).getPassword();
