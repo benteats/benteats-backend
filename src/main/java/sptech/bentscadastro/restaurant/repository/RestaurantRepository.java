@@ -63,4 +63,6 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
             "r.user.lng as lng," +
             "r.imgUrl as imgUrl FROM Restaurant r WHERE " + HAVERSINE_FORMULA + " < :distance ORDER BY "+ HAVERSINE_FORMULA + " DESC")
     List<RestaurantDetailDTO> findRestaurantsWithInDistance(@Param("lat") double lat, @Param("lng") double lng, @Param("distance") double distanceWithInKM);
+
+    Restaurant findByIdRestaurant(Integer idRestaurant);
 }
