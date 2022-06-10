@@ -172,30 +172,4 @@ class UserControllerTest {
 
         assertEquals(404, response.getStatusCodeValue());
     }
-
-    @Test
-    @DisplayName("retorna o status 200 e o valor true caso o id seja válido e o usuário esteja logado")
-    void authenticateSession_validIdIsLoggedTrue() {
-        Integer id = 1;
-        when(repository.existsById(id)).thenReturn(true);
-        when(repository.existsByIdUserAndIsLoggedTrue(id)).thenReturn(true);
-
-        ResponseEntity<Boolean> response = controller.authenticateSession(id);
-
-        assertEquals(200, response.getStatusCodeValue());
-        assertTrue(response.getBody());
-    }
-
-    @Test
-    @DisplayName("retorna o status 200 e o valor true caso o id seja válido e o usuário esteja logado")
-    void authenticateSession_validIdIsLoggedFalse() {
-        Integer id = 1;
-        when(repository.existsById(id)).thenReturn(true);
-        when(repository.existsByIdUserAndIsLoggedFalse(id)).thenReturn(true);
-
-        ResponseEntity<Boolean> response = controller.authenticateSession(id);
-
-        assertEquals(200, response.getStatusCodeValue());
-        assertFalse(response.getBody());
-    }
 }

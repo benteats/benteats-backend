@@ -8,12 +8,14 @@ import javax.validation.constraints.NotBlank;
 import java.util.Date;
 
 @Entity
+@Table(name = "tb_avaliation")
 public class Avaliation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_avaliation")
     private Integer idAvaliation;
 
-    private Date data;
+    private Date dhAvaliation;
 
     private Double rating;
 
@@ -21,9 +23,11 @@ public class Avaliation {
     private String comment;
 
     @ManyToOne
+    @JoinColumn(name = "idUser", referencedColumnName = "idUser", nullable = false)
     private User user;
 
     @ManyToOne
+    @JoinColumn(name = "idRestaurant", referencedColumnName = "idRestaurant", nullable = false)
     private Restaurant restaurant;
 
     public Integer getIdAvaliation() {
@@ -34,12 +38,12 @@ public class Avaliation {
         this.idAvaliation = idAvaliation;
     }
 
-    public Date getData() {
-        return data;
+    public Date getDhAvaliation() {
+        return dhAvaliation;
     }
 
-    public void setData(Date data) {
-        this.data = data;
+    public void setDhAvaliation(Date dhAvaliation) {
+        this.dhAvaliation = dhAvaliation;
     }
 
     public Double getRating() {

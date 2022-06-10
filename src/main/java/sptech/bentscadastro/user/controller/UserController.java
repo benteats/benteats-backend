@@ -125,22 +125,6 @@ public class UserController {
         return ResponseEntity.status(404).build();
     }
 
-    @GetMapping("/authenticateSession/{idUser}")
-    public ResponseEntity<Boolean> authenticateSession(@PathVariable Integer idUser) {
-
-        if (userRepository.existsById(idUser)) {
-            if (userRepository.existsByIdUserAndIsLoggedTrue(idUser)) {
-                return ResponseEntity.status(200).body(true);
-            }
-
-            if (userRepository.existsByIdUserAndIsLoggedFalse(idUser)) {
-                return ResponseEntity.status(200).body(false);
-            }
-        }
-
-        return ResponseEntity.status(404).build();
-    }
-
     @PostMapping("/historicStack/{idRestaurant}")
     public ResponseEntity historicStack(@PathVariable int idRestaurant) {
         if (userRepository.existsById(idRestaurant)) {
@@ -149,5 +133,4 @@ public class UserController {
         }
         return ResponseEntity.status(404).build();
     }
-
 }
