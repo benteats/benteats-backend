@@ -7,6 +7,13 @@ public class UpdateItemMenuFoodForm {
 
     private String description;
 
+
+    public UpdateItemMenuFoodForm(String name, Double price, String description) {
+        this.name = name;
+        this.price = price;
+        this.description = description;
+    }
+
     public String getName() {
         return name;
     }
