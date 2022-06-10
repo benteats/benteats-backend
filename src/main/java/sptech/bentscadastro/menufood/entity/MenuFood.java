@@ -3,6 +3,7 @@ package sptech.bentscadastro.menufood.entity;
 import sptech.bentscadastro.restaurant.entity.Restaurant;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "tb_menu_food")
@@ -11,10 +12,12 @@ public class MenuFood {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idFood;
 
+    @Size(min = 3, max = 50)
     private String name;
 
     private Double price;
 
+    @Size(min = 3, max = 200)
     private String description;
 
     @ManyToOne
