@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import sptech.bentscadastro.data.estructure.Stack;
 import sptech.bentscadastro.user.entity.User;
 import sptech.bentscadastro.user.form.UpdateUserForm;
 import sptech.bentscadastro.user.repository.UserRepository;
@@ -22,6 +23,9 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+
+    Stack stack = new Stack(50);
+
 
     @Bean
     public PasswordEncoder getPasswordEncoder() {
@@ -118,6 +122,15 @@ public class UserController {
             return ResponseEntity.status(406).build();
         }
 
+        return ResponseEntity.status(404).build();
+    }
+
+    @PostMapping("/historicStack/{idRestaurant}")
+    public ResponseEntity historicStack(@PathVariable int idRestaurant) {
+        if (userRepository.existsById(idRestaurant)) {
+            stack.push(idRestaurant);
+            return ResponseEntity.status(201).body(stack);
+        }
         return ResponseEntity.status(404).build();
     }
 }
