@@ -35,9 +35,13 @@ public class UserController {
 
     @PostMapping("/registerUser")
     public ResponseEntity<Void> resgisterUser(@RequestBody @Valid User newUser) {
-        newUser.setPassword(getPasswordEncoder().encode(newUser.getPassword()));
-        userRepository.save(newUser);
-        return ResponseEntity.status(201).build();
+        if (!userRepository.existsByEmail(newUser.getEmail()) && !userRepository.existsByPhone(newUser.getPhone())) {
+            newUser.setPassword(getPasswordEncoder().encode(newUser.getPassword()));
+            userRepository.save(newUser);
+            return ResponseEntity.status(201).build();
+        }
+
+        return ResponseEntity.status(403).build();
     }
 
     @GetMapping
