@@ -4,12 +4,18 @@ package sptech.bentscadastro.menufood.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import sptech.bentscadastro.data.estructure.TxtMannager;
 import sptech.bentscadastro.menufood.entity.MenuFood;
 import sptech.bentscadastro.menufood.form.UpdateItemMenuFoodForm;
 import sptech.bentscadastro.menufood.repository.MenuFoodRespository;
 import sptech.bentscadastro.restaurant.entity.Restaurant;
 import sptech.bentscadastro.restaurant.repository.RestaurantRepository;
+import sptech.bentscadastro.util.file.FileUpload;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -77,6 +83,22 @@ public class MenuFoodController {
             return ResponseEntity.status(201).build();
         }
 
+        return ResponseEntity.status(404).build();
+    }
+
+    @PostMapping(value = "/filereader/{idRestaurant}", consumes = { "multipart/form-data" })
+    public ResponseEntity<Void> txtFileFoodMenuReader(@RequestParam MultipartFile filename, @PathVariable Integer idRestaurant) throws IOException {
+        if (restaurantRepository.existsById(idRestaurant)) {
+            TxtMannager mannager = new TxtMannager();
+            FileUpload pathFinder = new FileUpload();
+
+            String filePath = pathFinder.saveArchive(filename.getOriginalFilename(), filename);
+
+            List<MenuFood> listFood = mannager.txtReaderMenuFood("Bents-txt-files/" + filePath);
+
+            this.registerListMenuFood(idRestaurant, listFood);
+            return ResponseEntity.status(201).build();
+        }
         return ResponseEntity.status(404).build();
     }
 
