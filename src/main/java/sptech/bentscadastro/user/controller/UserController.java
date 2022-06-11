@@ -26,7 +26,6 @@ public class UserController {
 
     Stack stack = new Stack(50);
 
-
     @Bean
     public PasswordEncoder getPasswordEncoder() {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
@@ -35,9 +34,13 @@ public class UserController {
 
     @PostMapping("/registerUser")
     public ResponseEntity<Void> resgisterUser(@RequestBody @Valid User newUser) {
-        newUser.setPassword(getPasswordEncoder().encode(newUser.getPassword()));
-        userRepository.save(newUser);
-        return ResponseEntity.status(201).build();
+        if (!userRepository.existsByEmail(newUser.getEmail()) && !userRepository.existsByPhone(newUser.getPhone())) {
+            newUser.setPassword(getPasswordEncoder().encode(newUser.getPassword()));
+            userRepository.save(newUser);
+            return ResponseEntity.status(201).build();
+        }
+
+        return ResponseEntity.status(403).build();
     }
 
     @GetMapping
@@ -129,8 +132,17 @@ public class UserController {
     public ResponseEntity historicStack(@PathVariable int idRestaurant) {
         if (userRepository.existsById(idRestaurant)) {
             stack.push(idRestaurant);
-            return ResponseEntity.status(201).body(stack);
+            return ResponseEntity.status(200).body(stack);
         }
-        return ResponseEntity.status(404).build();
+        return ResponseEntity.status(204).build();
     }
+
+    @GetMapping("/getHistoricStack")
+    public ResponseEntity getHistoricStack() {
+        if (stack.isEmpty()) {
+            return ResponseEntity.status(404).build();
+        }
+        return ResponseEntity.status(200).body(stack);
+    }
+
 }

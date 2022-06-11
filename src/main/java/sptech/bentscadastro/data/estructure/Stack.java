@@ -28,8 +28,7 @@ public class Stack {
     public void exibe() {
         if (isEmpty()) {
             System.out.println("Histórico vázio");
-        }
-        else {
+        } else {
             for (int i = topo; i >= 0; i--) {
                 System.out.println(pilha[i]);
             }
@@ -40,6 +39,13 @@ public class Stack {
         while (!isEmpty()) {
             System.out.println("Desempilhou: " + pop());
         }
+    }
+
+    public int peek() {
+        if (isEmpty()) {
+            System.out.println();;
+        }
+        return pilha[topo];
     }
 
 }
