@@ -52,52 +52,24 @@ public class UserController {
     }
 
     @PatchMapping("/updateUserById/{idUser}")
-    public ResponseEntity updateUserById(@PathVariable Integer idUser, @RequestBody UpdateUserForm updateUser) {
+    public ResponseEntity updateUserById(@PathVariable Integer idUser, @PathVariable String field, @PathVariable String value) {
         if (userRepository.existsById(idUser)) {
+            User user = userRepository.findByIdUser(idUser);
 
-            if (updateUser.getName() != null && !updateUser.getName().equals("")) {
-                userRepository.updateNameUserById(updateUser.getName(), idUser);
+            switch (field) {
+                case "name":
+                    user.setName(value);
+                    break;
+                case "email":
+                    user.setEmail(value);
+                    break;
+                case "phone":
+                    user.setPhone(value);
+                    break;
+                default:
+                    return ResponseEntity.status(406).build();
             }
-
-            if (updateUser.getEmail() != null && !updateUser.getEmail().equals("")) {
-                userRepository.updateEmailUserById(updateUser.getEmail(), idUser);
-            }
-
-            if (updateUser.getPhone() != null && !updateUser.getPhone().equals("")) {
-                userRepository.updatePhoneUserById(updateUser.getPhone(), idUser);
-            }
-
-            if (updateUser.getCep() != null && !updateUser.getCep().equals("")) {
-                userRepository.updateCepUserById(updateUser.getCep(), idUser);
-            }
-
-            if (updateUser.getState() != null && !updateUser.getState().equals("")) {
-                userRepository.updateStateUserById(updateUser.getState(), idUser);
-            }
-
-            if (updateUser.getCity() != null && !updateUser.getCity().equals("")) {
-                userRepository.updateCityUserById(updateUser.getCity(), idUser);
-            }
-
-            if (updateUser.getDistrict() != null && !updateUser.getDistrict().equals("")) {
-                userRepository.updateDistrictUserById(updateUser.getDistrict(), idUser);
-            }
-
-            if (updateUser.getAddress() != null && !updateUser.getAddress().equals("")) {
-                userRepository.updateAddressUserById(updateUser.getAddress(), idUser);
-            }
-
-            if (updateUser.getAddressNumber() != null) {
-                userRepository.updateAddressNumberUserById(updateUser.getAddressNumber(), idUser);
-            }
-
-            if (updateUser.getLat() != null && !updateUser.getLat().equals("")) {
-                userRepository.updateLatUserById(updateUser.getLat(), idUser);
-            }
-
-            if (updateUser.getLng() != null && !updateUser.getLng().equals("")) {
-                userRepository.updateLatUserById(updateUser.getLng(), idUser);
-            }
+            userRepository.save(user);
             return ResponseEntity.status(200).build();
         }
         return ResponseEntity.status(404).build();
@@ -132,11 +104,12 @@ public class UserController {
     public ResponseEntity<Void> updatePasswordById(@RequestBody UpdatePasswordForm updateUserForm, @PathVariable Integer idUser) {
         if (userRepository.existsById(idUser)) {
             Optional<User> user = userRepository.findById(idUser);
-            if (getPasswordEncoder().matches(updateUserForm.getCurrentPassword(), user.orElse(new User()).getPassword())) {
+            if (getPasswordEncoder().matches(updateUserForm.getCurrentPassword(), user.get().getPassword())) {
                 String pass =  getPasswordEncoder().encode(updateUserForm.getNewPassword());
                 userRepository.updatePasswordById(idUser, pass);
+                return ResponseEntity.status(200).build();
             }
-            return ResponseEntity.status(200).build();
+            return ResponseEntity.status(403).build();
         }
         return ResponseEntity.status(404).build();
     }
