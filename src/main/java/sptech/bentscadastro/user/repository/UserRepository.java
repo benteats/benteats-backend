@@ -3,6 +3,7 @@ package sptech.bentscadastro.user.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import sptech.bentscadastro.user.DTO.UserDetailDTO;
 import sptech.bentscadastro.user.entity.User;
 
 import javax.transaction.Transactional;
@@ -103,4 +104,12 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     Optional<User> findByEmail(String username);
 
     Optional<User> findByPhone(String username);
+
+    @Transactional
+    @Modifying
+    @Query("update User u set u.password = ?2 where u.idUser = ?1")
+    void updatePasswordById(Integer idUser, String newPassword);
+
+    @Query("select new sptech.bentscadastro.user.DTO.UserDetailDTO(u.name, u.email, u.phone, u.password) from User u where u.idUser = ?1")
+    UserDetailDTO getDetailsById(Integer idUser);
 }

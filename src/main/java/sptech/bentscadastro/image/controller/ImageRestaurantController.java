@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import sptech.bentscadastro.data.estructure.Queue;
+import sptech.bentscadastro.image.DTO.ImageDTO;
 import sptech.bentscadastro.image.entity.ImageRestaurant;
 import sptech.bentscadastro.image.form.UpdateImageRestaurantForm;
 import sptech.bentscadastro.image.repository.ImageRestaurantRepository;
@@ -14,6 +15,7 @@ import sptech.bentscadastro.restaurant.form.ImgUrl;
 import sptech.bentscadastro.restaurant.repository.RestaurantRepository;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/images")
@@ -48,7 +50,7 @@ public class ImageRestaurantController {
         return ResponseEntity.status(404).build();
     }
 
-    @PostMapping("/executeimagequeue")
+    @PostMapping("/executeImageQueue")
     public ResponseEntity executeImageQueue() {
 
         if (queueImg.isEmpty()) {
@@ -59,5 +61,16 @@ public class ImageRestaurantController {
             imageRestaurantRepository.save(queueImg.poll());
         }
         return ResponseEntity.status(200).build();
+    }
+
+    @GetMapping("/{idRestaurant}")
+    public ResponseEntity getImageByIdRestaurant(@PathVariable Integer idRestaurant) {
+        List<ImageDTO> imageRestaurants = imageRestaurantRepository.findByRestaurantIdRestaurant(idRestaurant);
+
+        if (imageRestaurants.isEmpty()) {
+            return ResponseEntity.status(204).build();
+        }
+
+        return ResponseEntity.status(200).body(imageRestaurants);
     }
 }
