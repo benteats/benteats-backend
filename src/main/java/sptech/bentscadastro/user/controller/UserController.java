@@ -150,11 +150,12 @@ public class UserController {
     public ResponseEntity<Void> updatePasswordById(@RequestBody UpdatePasswordForm updateUserForm, @PathVariable Integer idUser) {
         if (userRepository.existsById(idUser)) {
             Optional<User> user = userRepository.findById(idUser);
-            if (getPasswordEncoder().matches(updateUserForm.getCurrentPassword(), user.orElse(new User()).getPassword())) {
+            if (getPasswordEncoder().matches(updateUserForm.getCurrentPassword(), user.get().getPassword())) {
                 String pass =  getPasswordEncoder().encode(updateUserForm.getNewPassword());
                 userRepository.updatePasswordById(idUser, pass);
+                return ResponseEntity.status(200).build();
             }
-            return ResponseEntity.status(200).build();
+            return ResponseEntity.status(403).build();
         }
         return ResponseEntity.status(404).build();
     }
