@@ -15,7 +15,13 @@ import sptech.bentscadastro.restaurant.form.ImgUrl;
 import sptech.bentscadastro.restaurant.repository.RestaurantRepository;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import static java.util.stream.Collectors.toMap;
 
 @RestController
 @RequestMapping("/images")
@@ -70,6 +76,9 @@ public class ImageRestaurantController {
         if (imageRestaurants.isEmpty()) {
             return ResponseEntity.status(204).build();
         }
+
+        AtomicInteger index = new AtomicInteger(0);
+        imageRestaurants.stream().forEach(restaurant -> {restaurant.setId(index.incrementAndGet());});
 
         return ResponseEntity.status(200).body(imageRestaurants);
     }
