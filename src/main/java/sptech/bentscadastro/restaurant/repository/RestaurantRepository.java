@@ -4,6 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import sptech.bentscadastro.restaurant.DTO.RestaurantDTO;
 import sptech.bentscadastro.restaurant.DTO.RestaurantDetailDTO;
 import sptech.bentscadastro.restaurant.entity.Restaurant;
 
@@ -65,7 +66,7 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
     List<RestaurantDetailDTO> findRestaurantsWithInDistance(@Param("lat") double lat, @Param("lng") double lng, @Param("distance") double distanceWithInKM);
 @Query("SELECT r.idRestaurant as id," +
             "r.user.name as name FROM Restaurant r WHERE r.idRestaurant = ?1")
-List<RestaurantDetailDTO> findHistoricStack(Integer idRestaurant);
+List<RestaurantDTO> findHistoricStack(Integer idRestaurant);
 
     Restaurant findByIdRestaurant(Integer idRestaurant);
 }

@@ -55,7 +55,7 @@ public class JWTAuthenticateFilter extends UsernamePasswordAuthenticationFilter 
                 .withExpiresAt(new Date(System.currentTimeMillis() + TOKEN_EXPIRATION))
                 .sign(Algorithm.HMAC512(TOKEN_PASSWORD));
 
-        String body = userDetailData.getUserType() + " " + token;
+        String body = userDetailData.getIdUser() + " "+ userDetailData.getUserType() + " " + token;
 
         response.getWriter().write(body);
         response.getWriter().flush();

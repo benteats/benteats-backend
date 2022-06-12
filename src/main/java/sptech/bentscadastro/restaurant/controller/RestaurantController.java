@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sptech.bentscadastro.data.estructure.Queue;
 import sptech.bentscadastro.data.estructure.Stack;
+import sptech.bentscadastro.restaurant.DTO.RestaurantDTO;
 import sptech.bentscadastro.restaurant.DTO.RestaurantDetailDTO;
 import sptech.bentscadastro.restaurant.entity.Restaurant;
 import sptech.bentscadastro.restaurant.form.ImgUrl;
@@ -158,11 +159,11 @@ public class RestaurantController {
 
     @PostMapping("/historicStack/{idRestaurant}")
     public ResponseEntity historicStack(@PathVariable Integer idRestaurant) {
-        List<RestaurantDetailDTO> res;
+        List<RestaurantDTO> res;
         if (restaurantRepository.existsById(idRestaurant)) {
             res = restaurantRepository.findHistoricStack(idRestaurant);
 //            stack.push(res);
-            stack.push(res.get(idRestaurant).getName());
+            stack.push(res.get(idRestaurant).getIdRestaurant());
             return ResponseEntity.status(200).build();
         }
         return ResponseEntity.status(204).build();
