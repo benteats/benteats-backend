@@ -8,11 +8,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import sptech.bentscadastro.data.estructure.Stack;
 import sptech.bentscadastro.user.entity.User;
+import sptech.bentscadastro.user.form.UpdatePasswordForm;
 import sptech.bentscadastro.user.form.UpdateUserForm;
 import sptech.bentscadastro.user.repository.UserRepository;
 
 import javax.validation.Valid;
-import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 
@@ -143,6 +143,19 @@ public class UserController {
             return ResponseEntity.status(404).build();
         }
         return ResponseEntity.status(200).body(stack);
+    }
+
+    @PatchMapping("/updatePasswordById/{idUser}")
+    public ResponseEntity<Void> updatePasswordById(@RequestBody UpdatePasswordForm updateUserForm, @PathVariable Integer idUser) {
+        if (userRepository.existsById(idUser)) {
+            Optional<User> user = userRepository.findById(idUser);
+            if (getPasswordEncoder().matches(updateUserForm.getCurrentPassword(), user.orElse(new User()).getPassword())) {
+                String pass =  getPasswordEncoder().encode(updateUserForm.getNewPassword());
+                userRepository.updatePasswordById(idUser, pass);
+            }
+            return ResponseEntity.status(200).build();
+        }
+        return ResponseEntity.status(404).build();
     }
 
 }
