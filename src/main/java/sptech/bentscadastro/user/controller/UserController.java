@@ -25,8 +25,6 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
-    Stack stack = new Stack(50);
-
     @Bean
     public PasswordEncoder getPasswordEncoder() {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
@@ -101,22 +99,6 @@ public class UserController {
         return ResponseEntity.status(404).build();
     }
 
-    @PostMapping("/historicStack/{idRestaurant}")
-    public ResponseEntity historicStack(@PathVariable int idRestaurant) {
-        if (userRepository.existsById(idRestaurant)) {
-            stack.push(idRestaurant);
-            return ResponseEntity.status(200).body(stack);
-        }
-        return ResponseEntity.status(204).build();
-    }
-
-    @GetMapping("/getHistoricStack")
-    public ResponseEntity getHistoricStack() {
-        if (stack.isEmpty()) {
-            return ResponseEntity.status(404).build();
-        }
-        return ResponseEntity.status(200).body(stack);
-    }
 
     @PatchMapping("/updatePasswordById/{idUser}")
     public ResponseEntity<Void> updatePasswordById(@RequestBody UpdatePasswordForm updateUserForm, @PathVariable Integer idUser) {
