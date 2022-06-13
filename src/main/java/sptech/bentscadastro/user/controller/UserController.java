@@ -53,7 +53,7 @@ public class UserController {
         return ResponseEntity.status(200).body(users);
     }
 
-    @PatchMapping("/updateUserById/{idUser}")
+    @PatchMapping("/updateUserById/{idUser}/{field}/{value}")
     public ResponseEntity updateUserById(@PathVariable Integer idUser, @PathVariable String field, @PathVariable String value) {
         if (userRepository.existsById(idUser)) {
             User user = userRepository.findByIdUser(idUser);

@@ -65,4 +65,8 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
     List<RestaurantDetailDTO> findRestaurantsWithInDistance(@Param("lat") double lat, @Param("lng") double lng, @Param("distance") double distanceWithInKM);
 
     Restaurant findByIdRestaurant(Integer idRestaurant);
+
+    @Transactional
+    @Query("select r.idRestaurant from Restaurant r where r.user.idUser = ?1")
+    Integer getIdRestaurantByIdUser(Integer idUser);
 }
