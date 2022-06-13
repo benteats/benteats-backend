@@ -1,12 +1,12 @@
 package sptech.bentscadastro.data.estructure;
 
-public class Stack {
+public class Stack<T> {
 
     private int topo;
-    private int[] pilha;
+    private T[] pilha;
 
     public Stack(int capacidade) {
-        pilha = new int[capacidade];
+        pilha = (T[]) new Object[capacidade];
         topo = -1;
     }
 
@@ -14,11 +14,11 @@ public class Stack {
         return topo == -1;
     }
 
-    public void push(int info) {
+    public void push(T info) {
         pilha[++topo] = info;
     }
 
-    public int pop() {
+    public T pop() {
         if (isEmpty()) {
             System.out.println("Histórico vázio");
         }
@@ -41,11 +41,19 @@ public class Stack {
         }
     }
 
-    public int peek() {
+    public T peek() {
         if (isEmpty()) {
             System.out.println();;
         }
         return pilha[topo];
+    }
+
+    public T[] getPilha() {
+        return this.pilha;
+    }
+
+    public int getSize() {
+        return topo;
     }
 
 }

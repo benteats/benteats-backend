@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sptech.bentscadastro.data.estructure.Queue;
+import sptech.bentscadastro.data.estructure.Stack;
+import sptech.bentscadastro.restaurant.DTO.RestaurantDTO;
 import sptech.bentscadastro.restaurant.DTO.RestaurantDetailDTO;
 import sptech.bentscadastro.restaurant.entity.Restaurant;
 import sptech.bentscadastro.restaurant.form.ImgUrl;
@@ -21,6 +23,7 @@ import java.util.Optional;
 public class RestaurantController {
 
     Queue queueImg = new Queue(5);
+    Stack stack = new Stack(5);
 
     @Autowired
     private RestaurantRepository restaurantRepository;
@@ -153,4 +156,30 @@ public class RestaurantController {
 
         return ResponseEntity.status(404).build();
     }
+
+    @PostMapping("/historicStack/{idRestaurant}")
+    public ResponseEntity historicStack(@PathVariable Integer idRestaurant) {
+        List<RestaurantDTO> res;
+        if (restaurantRepository.existsById(idRestaurant)) {
+            res = restaurantRepository.findHistoricStack(idRestaurant);
+//            stack.push(res);
+            stack.push(res.get(idRestaurant).getIdRestaurant());
+            return ResponseEntity.status(200).build();
+        }
+        return ResponseEntity.status(204).build();
+    }
+
+    @GetMapping("/getHistoricStack")
+    public ResponseEntity getHistoricStack() {
+        if (stack.isEmpty()) {
+            return ResponseEntity.status(204).build();
+        }
+        return ResponseEntity.status(200).body(stack.getPilha());
+    }
+
+    @GetMapping("/getStackSize")
+    public ResponseEntity getStackSize() {
+        return ResponseEntity.status(200).body(stack.getSize());
+    }
+
 }

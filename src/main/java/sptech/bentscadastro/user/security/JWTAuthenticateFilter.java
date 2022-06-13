@@ -9,6 +9,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import sptech.bentscadastro.restaurant.repository.RestaurantRepository;
 import sptech.bentscadastro.user.data.UserDetailData;
 import sptech.bentscadastro.user.entity.User;
 import sptech.bentscadastro.user.repository.UserRepository;
@@ -49,13 +50,14 @@ public class JWTAuthenticateFilter extends UsernamePasswordAuthenticationFilter 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         UserDetailData userDetailData = (UserDetailData) authResult.getPrincipal();
+        String body = "";
 
         String token = JWT.create()
                 .withSubject(userDetailData.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + TOKEN_EXPIRATION))
                 .sign(Algorithm.HMAC512(TOKEN_PASSWORD));
 
-        String body = userDetailData.getIdUser() + " "+ userDetailData.getUserType() + " " + token;
+        body = userDetailData.getIdUser() + " "+ userDetailData.getUserType() + " " + token;
 
         response.getWriter().write(body);
         response.getWriter().flush();
