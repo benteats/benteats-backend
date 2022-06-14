@@ -35,7 +35,7 @@ public class ImageRestaurantController {
 
     Queue<ImageRestaurant> queueImg = new Queue<>(10);
 
-    @PostMapping(value = "/addimageinqueue/{idRestaurant}", consumes = "multipart/form-data")
+    @PostMapping(value = "/addImageInQueue/{idRestaurant}", consumes = "multipart/form-data")
     public ResponseEntity registerImageInQueue(@RequestParam MultipartFile img, @PathVariable Integer idRestaurant) throws IOException {
         if (restaurantRepository.existsById(idRestaurant)) {
 

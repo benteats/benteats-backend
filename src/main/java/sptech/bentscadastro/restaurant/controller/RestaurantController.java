@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/restaurants")
 public class RestaurantController {
 
@@ -37,8 +38,7 @@ public class RestaurantController {
             User restaurantUser = userRepository.findByIdUser(idUser);
             newRestaurant.setUser(restaurantUser);
             restaurantRepository.save(newRestaurant);
-            Restaurant restaurant = restaurantRepository.findByUserIdUser(idUser);
-            return ResponseEntity.status(201).body(restaurant.getIdRestaurant());
+            return ResponseEntity.status(201).body(newRestaurant.getIdRestaurant());
         }
         return ResponseEntity.status(404).build();
     }
