@@ -11,7 +11,6 @@ import sptech.bentscadastro.restaurant.entity.Restaurant;
 import sptech.bentscadastro.restaurant.form.ImgUrl;
 import sptech.bentscadastro.restaurant.form.RestaurantUpdateForm;
 import sptech.bentscadastro.restaurant.repository.RestaurantRepository;
-import sptech.bentscadastro.user.DTO.UserDetailDTO;
 import sptech.bentscadastro.user.entity.User;
 import sptech.bentscadastro.user.repository.UserRepository;
 
@@ -181,16 +180,6 @@ public class RestaurantController {
     @GetMapping("/getStackSize")
     public ResponseEntity getStackSize() {
         return ResponseEntity.status(200).body(stack.getSize());
-    }
-
-    @GetMapping("/getIdRestaurantByIdUser/{idUser}")
-    public ResponseEntity<Integer> getIdRestaurantByIdUser(@PathVariable Integer idUser) {
-        if (userRepository.existsById(idUser)) {
-            Integer idRestaurant = restaurantRepository.findIdRestaurantByIdUser(idUser);
-            return ResponseEntity.status(200).body(idRestaurant);
-        }
-
-        return ResponseEntity.status(404).build();
     }
 
 }
