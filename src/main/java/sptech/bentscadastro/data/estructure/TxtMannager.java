@@ -98,6 +98,7 @@ public class TxtMannager {
         Float latitude, longitude;
 
         // Restaurant
+        String foodType, openingTime, closingTime, descRestaurant, priceAverage;
 
 
         // Abre o arquivo para leitura
@@ -136,23 +137,9 @@ public class TxtMannager {
                     latitude = Float.valueOf(registro.substring(380,388).replace(",", "."));
                     longitude = Float.valueOf(registro.substring(388,396).replace(",", "."));
 
-                    System.out.println("E um registro de Corpo de Restaurante!");
-                    System.out.println("Tipo: " + typeUser);
-                    System.out.println("Nome do Restaurante: " + nameUser);
-                    System.out.println("Email do Restaurante: " + emailUser);
-                    System.out.println("Senha do Restaurante:" + password);
-                    System.out.println("Telefone: " + phoneUser);
-                    System.out.println("CEP: " + cep);
-                    System.out.println("Estado: " + state);
-                    System.out.println("Cidade: " + city);
-                    System.out.println("Distrito: " + district);
-                    System.out.println("Endereço: " + adress);
-                    System.out.println("Número Endereço: " + adressNumber);
-                    System.out.println("Latitude: " + latitude);
-                    System.out.println("Longitude: " + longitude);
 
                     User newUser = new User();
-                    Restaurant newRestaurant = new Restaurant();
+
 
                     newUser.setName(nameUser);
                     newUser.setEmail(emailUser);
@@ -169,6 +156,29 @@ public class TxtMannager {
                     newUser.setLng(longitude);
 
 
+                    stackUser.push(newUser);
+
+
+                } else if(tipoRegistro.equals("02")) {
+
+                   foodType = registro.substring(2, 32).trim();
+                   priceAverage = registro.substring(32, 39).trim();
+                   openingTime = registro.substring(39, 44).trim();
+                   closingTime = registro.substring(44, 49).trim();
+                   descRestaurant = registro.substring(49,249).trim();
+
+
+                   Restaurant newRestaurant = new Restaurant();
+
+
+                   newRestaurant.setFoodType(foodType);
+                   newRestaurant.setPriceAverage(priceAverage);
+                   newRestaurant.setOpeningTime(openingTime);
+                   newRestaurant.setClosingTime(closingTime);
+                   newRestaurant.setDescription(descRestaurant);
+
+
+                   stackRestaurant.push(newRestaurant);
 
                 }
                 else {
@@ -180,6 +190,13 @@ public class TxtMannager {
             entrada.close();
         } catch (IOException erro) {
             System.out.println("Erro ao ler o tipo de registro: " + erro);
+        }
+
+        while (!stackUser.isEmpty() || !stackRestaurant.isEmpty()) {
+
+            queueList.insert(stackUser.pop());
+            queueList.insert(stackRestaurant.pop());
+
         }
 
         return queueList;
