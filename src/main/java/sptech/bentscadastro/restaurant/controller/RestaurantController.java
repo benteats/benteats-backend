@@ -182,4 +182,14 @@ public class RestaurantController {
         return ResponseEntity.status(200).body(stack.getSize());
     }
 
+    @GetMapping("/getIdRestaurantByIdUser/{idUser}")
+    public ResponseEntity<Integer> getIdRestaurantByIdUser(@PathVariable Integer idUser) {
+        if (userRepository.existsById(idUser)) {
+            Integer idRestaurant = restaurantRepository.findIdRestaurantByIdUser(idUser);
+            return ResponseEntity.status(200).body(idRestaurant);
+        }
+
+        return ResponseEntity.status(404).build();
+    }
+
 }

@@ -86,7 +86,7 @@ public class MenuFoodController {
         return ResponseEntity.status(404).build();
     }
 
-    @PostMapping(value = "/filereader/{idRestaurant}", consumes = { "multipart/form-data" })
+    @PostMapping(value = "/fileReader/{idRestaurant}", consumes = { "multipart/form-data" })
     public ResponseEntity<Void> txtFileFoodMenuReader(@RequestParam MultipartFile filename, @PathVariable Integer idRestaurant) throws IOException {
         if (restaurantRepository.existsById(idRestaurant)) {
             TxtMannager mannager = new TxtMannager();
