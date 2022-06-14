@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import sptech.bentscadastro.data.estructure.Queue;
+import sptech.bentscadastro.data.estructure.Stack;
 import sptech.bentscadastro.image.DTO.ImageDTO;
 import sptech.bentscadastro.image.entity.ImageRestaurant;
 import sptech.bentscadastro.image.form.UpdateImageRestaurantForm;
@@ -34,8 +35,9 @@ public class ImageRestaurantController {
     private RestaurantRepository restaurantRepository;
 
     Queue<ImageRestaurant> queueImg = new Queue<>(10);
+    Stack<ImageRestaurant> stackImg = new Stack<>(10);
 
-    @PostMapping(value = "/addimageinqueue/{idRestaurant}", consumes = "multipart/form-data")
+    @PostMapping(value = "/addImageInStack/{idRestaurant}", consumes = "multipart/form-data")
     public ResponseEntity registerImageInQueue(@RequestParam MultipartFile img, @PathVariable Integer idRestaurant) throws IOException {
         if (restaurantRepository.existsById(idRestaurant)) {
 
@@ -46,25 +48,26 @@ public class ImageRestaurantController {
 
             UpdateImageRestaurantForm newImage = new UpdateImageRestaurantForm(content);
 
+            restaurant.setImgUrl(content);
             imgRestaurant.setImage(content);
             imgRestaurant.setRestaurant(restaurant);
 
-            queueImg.insert(imgRestaurant);
+            stackImg.push(imgRestaurant);
 
             return ResponseEntity.status(200).build();
         }
         return ResponseEntity.status(404).build();
     }
 
-    @PostMapping("/executeImageQueue")
+    @PostMapping("/executeImageStack")
     public ResponseEntity executeImageQueue() {
 
-        if (queueImg.isEmpty()) {
+        if (stackImg.isEmpty()) {
             return ResponseEntity.status(404).build();
         }
 
-        while (!queueImg.isEmpty()){
-            imageRestaurantRepository.save(queueImg.poll());
+        while (!stackImg.isEmpty()){
+            imageRestaurantRepository.save(stackImg.pop());
         }
         return ResponseEntity.status(200).build();
     }
