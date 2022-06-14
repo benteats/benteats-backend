@@ -25,7 +25,7 @@ public class Restaurant {
     @JoinColumn(name = "idUser", referencedColumnName = "idUser", nullable = false)
     private User user;
 
-    private String imgUrl;
+    private byte[] imgUrl;
 
     public Integer getIdRestaurant() {
         return idRestaurant;
@@ -83,11 +83,11 @@ public class Restaurant {
         this.user = user;
     }
 
-    public String getImgUrl() {
+    public byte[] getImgUrl() {
         return imgUrl;
     }
 
-    public void setImgUrl(String imgUrl) {
+    public void setImgUrl(byte[] imgUrl) {
         this.imgUrl = imgUrl;
     }
 }
