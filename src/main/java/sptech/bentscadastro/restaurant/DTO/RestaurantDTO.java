@@ -2,29 +2,10 @@ package sptech.bentscadastro.restaurant.DTO;
 
 import sptech.bentscadastro.restaurant.entity.Restaurant;
 
-public class RestaurantDTO {
+public interface RestaurantDTO {
 
-    private Integer idRestaurant;
-    private String description;
+    Integer getId();
 
-    public RestaurantDTO(Integer idRestaurant, String description) {
-        this.idRestaurant = idRestaurant;
-        this.description = description;
-    }
+    String getAddress();
 
-    public Integer getIdRestaurant() {
-        return idRestaurant;
-    }
-
-    public void setIdRestaurant(Integer idRestaurant) {
-        this.idRestaurant = idRestaurant;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 }

@@ -65,7 +65,7 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
             "r.imgUrl as imgUrl FROM Restaurant r WHERE " + HAVERSINE_FORMULA + " < :distance ORDER BY "+ HAVERSINE_FORMULA + " DESC")
     List<RestaurantDetailDTO> findRestaurantsWithInDistance(@Param("lat") double lat, @Param("lng") double lng, @Param("distance") double distanceWithInKM);
 @Query("SELECT r.idRestaurant as id," +
-            "r.user.name as name FROM Restaurant r WHERE r.idRestaurant = ?1")
+            "r.user.address as address FROM Restaurant r WHERE r.idRestaurant = ?1")
 List<RestaurantDTO> findHistoricStack(Integer idRestaurant);
 
     Restaurant findByIdRestaurant(Integer idRestaurant);

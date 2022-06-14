@@ -162,8 +162,7 @@ public class RestaurantController {
         List<RestaurantDTO> res;
         if (restaurantRepository.existsById(idRestaurant)) {
             res = restaurantRepository.findHistoricStack(idRestaurant);
-//            stack.push(res);
-            stack.push(res.get(idRestaurant).getIdRestaurant());
+            stack.push(res);
             return ResponseEntity.status(200).build();
         }
         return ResponseEntity.status(204).build();
