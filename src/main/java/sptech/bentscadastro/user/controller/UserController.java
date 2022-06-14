@@ -6,12 +6,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import sptech.bentscadastro.data.estructure.Stack;
+import sptech.bentscadastro.user.DTO.UserDetailDTO;
 import sptech.bentscadastro.user.entity.User;
+import sptech.bentscadastro.user.form.UpdatePasswordForm;
 import sptech.bentscadastro.user.form.UpdateUserForm;
 import sptech.bentscadastro.user.repository.UserRepository;
 
 import javax.validation.Valid;
-import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,7 +25,6 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
-
     @Bean
     public PasswordEncoder getPasswordEncoder() {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
@@ -31,10 +32,15 @@ public class UserController {
     }
 
     @PostMapping("/registerUser")
-    public ResponseEntity<Void> resgisterUser(@RequestBody @Valid User newUser) {
-        newUser.setPassword(getPasswordEncoder().encode(newUser.getPassword()));
-        userRepository.save(newUser);
-        return ResponseEntity.status(201).build();
+    public ResponseEntity<Integer> resgisterUser(@RequestBody @Valid User newUser) {
+        if (!userRepository.existsByEmail(newUser.getEmail()) && !userRepository.existsByPhone(newUser.getPhone())) {
+            newUser.setPassword(getPasswordEncoder().encode(newUser.getPassword()));
+            userRepository.save(newUser);
+            User user = userRepository.findByEmailAndPhone(newUser.getEmail(), newUser.getPhone());
+            return ResponseEntity.status(201).body(user.getIdUser());
+        }
+
+        return ResponseEntity.status(403).build();
     }
 
     @GetMapping
@@ -46,53 +52,25 @@ public class UserController {
         return ResponseEntity.status(200).body(users);
     }
 
-    @PatchMapping("/updateUserById/{idUser}")
-    public ResponseEntity updateUserById(@PathVariable Integer idUser, @RequestBody UpdateUserForm updateUser) {
+    @PatchMapping("/updateUserById/{idUser}/{field}/{value}")
+    public ResponseEntity updateUserById(@PathVariable Integer idUser, @PathVariable String field, @PathVariable String value) {
         if (userRepository.existsById(idUser)) {
+            User user = userRepository.findByIdUser(idUser);
 
-            if (updateUser.getName() != null && !updateUser.getName().equals("")) {
-                userRepository.updateNameUserById(updateUser.getName(), idUser);
+            switch (field) {
+                case "name":
+                    user.setName(value);
+                    break;
+                case "email":
+                    user.setEmail(value);
+                    break;
+                case "phone":
+                    user.setPhone(value);
+                    break;
+                default:
+                    return ResponseEntity.status(406).build();
             }
-
-            if (updateUser.getEmail() != null && !updateUser.getEmail().equals("")) {
-                userRepository.updateEmailUserById(updateUser.getEmail(), idUser);
-            }
-
-            if (updateUser.getPhone() != null && !updateUser.getPhone().equals("")) {
-                userRepository.updatePhoneUserById(updateUser.getPhone(), idUser);
-            }
-
-            if (updateUser.getCep() != null && !updateUser.getCep().equals("")) {
-                userRepository.updateCepUserById(updateUser.getCep(), idUser);
-            }
-
-            if (updateUser.getState() != null && !updateUser.getState().equals("")) {
-                userRepository.updateStateUserById(updateUser.getState(), idUser);
-            }
-
-            if (updateUser.getCity() != null && !updateUser.getCity().equals("")) {
-                userRepository.updateCityUserById(updateUser.getCity(), idUser);
-            }
-
-            if (updateUser.getDistrict() != null && !updateUser.getDistrict().equals("")) {
-                userRepository.updateDistrictUserById(updateUser.getDistrict(), idUser);
-            }
-
-            if (updateUser.getAddress() != null && !updateUser.getAddress().equals("")) {
-                userRepository.updateAddressUserById(updateUser.getAddress(), idUser);
-            }
-
-            if (updateUser.getAddressNumber() != null) {
-                userRepository.updateAddressNumberUserById(updateUser.getAddressNumber(), idUser);
-            }
-
-            if (updateUser.getLat() != null && !updateUser.getLat().equals("")) {
-                userRepository.updateLatUserById(updateUser.getLat(), idUser);
-            }
-
-            if (updateUser.getLng() != null && !updateUser.getLng().equals("")) {
-                userRepository.updateLatUserById(updateUser.getLng(), idUser);
-            }
+            userRepository.save(user);
             return ResponseEntity.status(200).build();
         }
         return ResponseEntity.status(404).build();
@@ -122,17 +100,26 @@ public class UserController {
         return ResponseEntity.status(404).build();
     }
 
-    @GetMapping("/authenticateSession/{idUser}")
-    public ResponseEntity<Boolean> authenticateSession(@PathVariable Integer idUser) {
 
+    @PatchMapping("/updatePasswordById/{idUser}")
+    public ResponseEntity<Void> updatePasswordById(@RequestBody UpdatePasswordForm updateUserForm, @PathVariable Integer idUser) {
         if (userRepository.existsById(idUser)) {
-            if (userRepository.existsByIdUserAndIsLoggedTrue(idUser)) {
-                return ResponseEntity.status(200).body(true);
+            Optional<User> user = userRepository.findById(idUser);
+            if (getPasswordEncoder().matches(updateUserForm.getCurrentPassword(), user.get().getPassword())) {
+                String pass =  getPasswordEncoder().encode(updateUserForm.getNewPassword());
+                userRepository.updatePasswordById(idUser, pass);
+                return ResponseEntity.status(200).build();
             }
+            return ResponseEntity.status(403).build();
+        }
+        return ResponseEntity.status(404).build();
+    }
 
-            if (userRepository.existsByIdUserAndIsLoggedFalse(idUser)) {
-                return ResponseEntity.status(200).body(false);
-            }
+    @GetMapping("/getUserDetailById/{idUser}")
+    public ResponseEntity<UserDetailDTO> getUserDetailById(@PathVariable Integer idUser) {
+        if (userRepository.existsById(idUser)) {
+            UserDetailDTO userDetail = userRepository.getDetailsById(idUser);
+            return ResponseEntity.status(200).body(userDetail);
         }
 
         return ResponseEntity.status(404).build();

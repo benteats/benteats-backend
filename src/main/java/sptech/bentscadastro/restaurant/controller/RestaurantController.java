@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sptech.bentscadastro.data.estructure.Queue;
+import sptech.bentscadastro.data.estructure.Stack;
+import sptech.bentscadastro.restaurant.DTO.RestaurantDTO;
 import sptech.bentscadastro.restaurant.DTO.RestaurantDetailDTO;
 import sptech.bentscadastro.restaurant.entity.Restaurant;
 import sptech.bentscadastro.restaurant.form.ImgUrl;
@@ -17,10 +19,12 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/restaurants")
 public class RestaurantController {
 
     Queue queueImg = new Queue(5);
+    Stack stack = new Stack(5);
 
     @Autowired
     private RestaurantRepository restaurantRepository;
@@ -34,7 +38,7 @@ public class RestaurantController {
             User restaurantUser = userRepository.findByIdUser(idUser);
             newRestaurant.setUser(restaurantUser);
             restaurantRepository.save(newRestaurant);
-            return ResponseEntity.status(201).build();
+            return ResponseEntity.status(201).body(newRestaurant.getIdRestaurant());
         }
         return ResponseEntity.status(404).build();
     }
@@ -98,20 +102,20 @@ public class RestaurantController {
         }
         return ResponseEntity.status(200).body(restaurants);
     }
-    @PostMapping("/registerImgUrl/{idRestaurant}")
-    public ResponseEntity registerImgUrl(@RequestBody ImgUrl imgUrl, @PathVariable Integer idRestaurant) {
-        if (restaurantRepository.existsById(idRestaurant)) {
-            Restaurant restaurant = restaurantRepository.getById(idRestaurant);
-            restaurant.setImgUrl(imgUrl.getImgUrl());
-            restaurantRepository.save(restaurant);
-            return ResponseEntity.status(200).build();
-        }
-
-        return ResponseEntity.status(404).build();
-    }
+//    @PostMapping("/registerImgUrl/{idRestaurant}")
+//    public ResponseEntity registerImgUrl(@RequestBody ImgUrl imgUrl, @PathVariable Integer idRestaurant) {
+//        if (restaurantRepository.existsById(idRestaurant)) {
+//            Restaurant restaurant = restaurantRepository.getById(idRestaurant);
+//            restaurant.setImgUrl(imgUrl.getImgUrl());
+//            restaurantRepository.save(restaurant);
+//            return ResponseEntity.status(200).build();
+//        }
+//
+//        return ResponseEntity.status(404).build();
+//    }
 
     @GetMapping("/getImgUrlByIdRestaurant/{idRestaurant}")
-    public ResponseEntity<String> getImgUrlByIdRestaurant(@PathVariable Integer idResturant) {
+    public ResponseEntity<byte[]> getImgUrlByIdRestaurant(@PathVariable Integer idResturant) {
         if (restaurantRepository.existsById(idResturant)) {
             Optional<Restaurant> restaurant = restaurantRepository.findById(idResturant);
             return ResponseEntity.status(200).body(restaurant.get().getImgUrl());
@@ -120,29 +124,29 @@ public class RestaurantController {
         return ResponseEntity.status(404).build();
     }
 
-    @PostMapping("/registerImgInQueue/{idRestaurant}")
-    public ResponseEntity registerImgInQueue(@RequestBody ImgUrl imgUrl, @PathVariable Integer idRestaurant) {
-        if (restaurantRepository.existsById(idRestaurant)) {
-            queueImg.insert(imgUrl);
-            return ResponseEntity.status(200).build();
-        }
-        return ResponseEntity.status(404).build();
-    }
-
-    @PostMapping("/executeImgQueue/{idRestaurant}")
-    public ResponseEntity executeImgQueue(@RequestBody ImgUrl imgUrl, @PathVariable Integer idRestaurant) {
-        if (restaurantRepository.existsById(idRestaurant)) {
-            Restaurant restaurant = restaurantRepository.getById(idRestaurant);
-            for (int i = 0; i < queueImg.queueSize(); i++) {
-                restaurant.setImgUrl(queueImg.poll().toString());
-                restaurantRepository.save(restaurant);
-            }
-            queueImg.clearQueue();
-            imgUrl.setSize(0);
-            return ResponseEntity.status(200).build();
-        }
-        return ResponseEntity.status(404).build();
-    }
+//    @PostMapping("/registerImgInQueue/{idRestaurant}")
+//    public ResponseEntity registerImgInQueue(@RequestBody ImgUrl imgUrl, @PathVariable Integer idRestaurant) {
+//        if (restaurantRepository.existsById(idRestaurant)) {
+//            queueImg.insert(imgUrl);
+//            return ResponseEntity.status(200).build();
+//        }
+//        return ResponseEntity.status(404).build();
+//    }
+//
+//    @PostMapping("/executeImgQueue/{idRestaurant}")
+//    public ResponseEntity executeImgQueue(@RequestBody ImgUrl imgUrl, @PathVariable Integer idRestaurant) {
+//        if (restaurantRepository.existsById(idRestaurant)) {
+//            Restaurant restaurant = restaurantRepository.getById(idRestaurant);
+//            for (int i = 0; i < queueImg.queueSize(); i++) {
+//                restaurant.setImgUrl(queueImg.poll().toString());
+//                restaurantRepository.save(restaurant);
+//            }
+//            queueImg.clearQueue();
+//            imgUrl.setSize(0);
+//            return ResponseEntity.status(200).build();
+//        }
+//        return ResponseEntity.status(404).build();
+//    }
 
     @GetMapping("/getRestaurantById/{idRestaurant}")
     public ResponseEntity<Optional<Restaurant>> getRestaurantById(@PathVariable Integer idRestaurant) {
@@ -153,4 +157,39 @@ public class RestaurantController {
 
         return ResponseEntity.status(404).build();
     }
+
+    @PostMapping("/historicStack/{idRestaurant}")
+    public ResponseEntity historicStack(@PathVariable Integer idRestaurant) {
+        List<RestaurantDTO> res;
+        if (restaurantRepository.existsById(idRestaurant)) {
+            res = restaurantRepository.findHistoricStack(idRestaurant);
+            stack.push(res);
+            return ResponseEntity.status(200).build();
+        }
+        return ResponseEntity.status(204).build();
+    }
+
+    @GetMapping("/getHistoricStack")
+    public ResponseEntity getHistoricStack() {
+        if (stack.isEmpty()) {
+            return ResponseEntity.status(204).build();
+        }
+        return ResponseEntity.status(200).body(stack.getPilha());
+    }
+
+    @GetMapping("/getStackSize")
+    public ResponseEntity getStackSize() {
+        return ResponseEntity.status(200).body(stack.getSize());
+    }
+
+    @GetMapping("/getIdRestaurantByIdUser/{idUser}")
+    public ResponseEntity<Integer> getIdRestaurantByIdUser(@PathVariable Integer idUser) {
+        if (userRepository.existsById(idUser)) {
+            Integer idRestaurant = restaurantRepository.findIdRestaurantByIdUser(idUser);
+            return ResponseEntity.status(200).body(idRestaurant);
+        }
+
+        return ResponseEntity.status(404).build();
+    }
+
 }

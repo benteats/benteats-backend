@@ -17,7 +17,6 @@ public class User {
     @NotBlank
     public String userType;
     @NotBlank
-    @Pattern(regexp = "^[^\\s@]+@[^\\s@]+\\.[^\\s@]{2,}$", message = "E-mail inválido")
     public String email;
     @NotBlank
     @Pattern(regexp = "^\\([1-9]{2}\\) (?:[2-8]|9[1-9])[0-9]{3}\\-[0-9]{4}$", message = "Informe um telefone válido com ou sem DDD")

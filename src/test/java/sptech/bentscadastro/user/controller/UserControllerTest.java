@@ -75,33 +75,33 @@ class UserControllerTest {
         assertEquals(user1, response.getBody().get(0));
     }
 
-    @Test
-    @DisplayName("Retorna o status 404 se não existir um usuário com o id passado como parametro para o método" +
-            "updateUserById")
-    void updateUserById_invalidId() {
-        Integer id = 1;
-        UpdateUserForm updateUserForm1 = new UpdateUserForm();
-        when(repository.existsById(id)).thenReturn(false);
-
-        ResponseEntity<Void> response = controller.updateUserById(id, updateUserForm1);
-
-        assertEquals(404, response.getStatusCodeValue());
-
-    }
-
-    @Test
-    @DisplayName("Faz o update do usuário quando o id passado como parametro para o metodo" +
-            "updateUserById é válido")
-    void updateUserById_validId() {
-        Integer id = 1;
-        String name = "teste";
-        UpdateUserForm updateUserForm = new UpdateUserForm();
-        when(repository.existsById(id)).thenReturn(true);
-
-        ResponseEntity<Void> response = controller.updateUserById(id, updateUserForm);
-
-        assertEquals(200, response.getStatusCodeValue());
-    }
+//    @Test
+//    @DisplayName("Retorna o status 404 se não existir um usuário com o id passado como parametro para o método" +
+//            "updateUserById")
+//    void updateUserById_invalidId() {
+//        Integer id = 1;
+//        UpdateUserForm updateUserForm1 = new UpdateUserForm();
+//        when(repository.existsById(id)).thenReturn(false);
+//
+//        ResponseEntity<Void> response = controller.updateUserById(id, updateUserForm1);
+//
+//        assertEquals(404, response.getStatusCodeValue());
+//
+//    }
+//
+//    @Test
+//    @DisplayName("Faz o update do usuário quando o id passado como parametro para o metodo" +
+//            "updateUserById é válido")
+//    void updateUserById_validId() {
+//        Integer id = 1;
+//        String name = "teste";
+//        UpdateUserForm updateUserForm = new UpdateUserForm();
+//        when(repository.existsById(id)).thenReturn(true);
+//
+//        ResponseEntity<Void> response = controller.updateUserById(id, updateUserForm);
+//
+//        assertEquals(200, response.getStatusCodeValue());
+//    }
 
     @Test
     @DisplayName("Faz o logOff do usuário caso o usuário esteja realmente logado na aplicação " +
@@ -171,31 +171,5 @@ class UserControllerTest {
         ResponseEntity<Void> response = controller.deleteUserById(id);
 
         assertEquals(404, response.getStatusCodeValue());
-    }
-
-    @Test
-    @DisplayName("retorna o status 200 e o valor true caso o id seja válido e o usuário esteja logado")
-    void authenticateSession_validIdIsLoggedTrue() {
-        Integer id = 1;
-        when(repository.existsById(id)).thenReturn(true);
-        when(repository.existsByIdUserAndIsLoggedTrue(id)).thenReturn(true);
-
-        ResponseEntity<Boolean> response = controller.authenticateSession(id);
-
-        assertEquals(200, response.getStatusCodeValue());
-        assertTrue(response.getBody());
-    }
-
-    @Test
-    @DisplayName("retorna o status 200 e o valor true caso o id seja válido e o usuário esteja logado")
-    void authenticateSession_validIdIsLoggedFalse() {
-        Integer id = 1;
-        when(repository.existsById(id)).thenReturn(true);
-        when(repository.existsByIdUserAndIsLoggedFalse(id)).thenReturn(true);
-
-        ResponseEntity<Boolean> response = controller.authenticateSession(id);
-
-        assertEquals(200, response.getStatusCodeValue());
-        assertFalse(response.getBody());
     }
 }
