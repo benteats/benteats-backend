@@ -74,4 +74,5 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
     @Query("select r.idRestaurant from Restaurant r where r.user.idUser = ?1")
     Integer getIdRestaurantByIdUser(Integer idUser);
 
+    Restaurant findByUserIdUser(Integer idUser);
 }

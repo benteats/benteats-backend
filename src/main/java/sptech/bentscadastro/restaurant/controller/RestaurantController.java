@@ -37,7 +37,8 @@ public class RestaurantController {
             User restaurantUser = userRepository.findByIdUser(idUser);
             newRestaurant.setUser(restaurantUser);
             restaurantRepository.save(newRestaurant);
-            return ResponseEntity.status(201).build();
+            Restaurant restaurant = restaurantRepository.findByUserIdUser(idUser);
+            return ResponseEntity.status(201).body(restaurant.getIdRestaurant());
         }
         return ResponseEntity.status(404).build();
     }
