@@ -32,11 +32,12 @@ public class UserController {
     }
 
     @PostMapping("/registerUser")
-    public ResponseEntity<Void> resgisterUser(@RequestBody @Valid User newUser) {
+    public ResponseEntity<Integer> resgisterUser(@RequestBody @Valid User newUser) {
         if (!userRepository.existsByEmail(newUser.getEmail()) && !userRepository.existsByPhone(newUser.getPhone())) {
             newUser.setPassword(getPasswordEncoder().encode(newUser.getPassword()));
             userRepository.save(newUser);
-            return ResponseEntity.status(201).build();
+            User user = userRepository.findByEmailAndPhone(newUser.getEmail(), newUser.getPhone());
+            return ResponseEntity.status(201).body(user.getIdUser());
         }
 
         return ResponseEntity.status(403).build();

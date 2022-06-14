@@ -112,4 +112,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     @Query("select new sptech.bentscadastro.user.DTO.UserDetailDTO(u.name, u.email, u.phone, u.password) from User u where u.idUser = ?1")
     UserDetailDTO getDetailsById(Integer idUser);
+
+    User findByEmailAndPhone(String email, String phone);
 }
