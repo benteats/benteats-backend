@@ -101,20 +101,20 @@ public class RestaurantController {
         }
         return ResponseEntity.status(200).body(restaurants);
     }
-    @PostMapping("/registerImgUrl/{idRestaurant}")
-    public ResponseEntity registerImgUrl(@RequestBody ImgUrl imgUrl, @PathVariable Integer idRestaurant) {
-        if (restaurantRepository.existsById(idRestaurant)) {
-            Restaurant restaurant = restaurantRepository.getById(idRestaurant);
-            restaurant.setImgUrl(imgUrl.getImgUrl());
-            restaurantRepository.save(restaurant);
-            return ResponseEntity.status(200).build();
-        }
-
-        return ResponseEntity.status(404).build();
-    }
+//    @PostMapping("/registerImgUrl/{idRestaurant}")
+//    public ResponseEntity registerImgUrl(@RequestBody ImgUrl imgUrl, @PathVariable Integer idRestaurant) {
+//        if (restaurantRepository.existsById(idRestaurant)) {
+//            Restaurant restaurant = restaurantRepository.getById(idRestaurant);
+//            restaurant.setImgUrl(imgUrl.getImgUrl());
+//            restaurantRepository.save(restaurant);
+//            return ResponseEntity.status(200).build();
+//        }
+//
+//        return ResponseEntity.status(404).build();
+//    }
 
     @GetMapping("/getImgUrlByIdRestaurant/{idRestaurant}")
-    public ResponseEntity<String> getImgUrlByIdRestaurant(@PathVariable Integer idResturant) {
+    public ResponseEntity<byte[]> getImgUrlByIdRestaurant(@PathVariable Integer idResturant) {
         if (restaurantRepository.existsById(idResturant)) {
             Optional<Restaurant> restaurant = restaurantRepository.findById(idResturant);
             return ResponseEntity.status(200).body(restaurant.get().getImgUrl());
@@ -123,29 +123,29 @@ public class RestaurantController {
         return ResponseEntity.status(404).build();
     }
 
-    @PostMapping("/registerImgInQueue/{idRestaurant}")
-    public ResponseEntity registerImgInQueue(@RequestBody ImgUrl imgUrl, @PathVariable Integer idRestaurant) {
-        if (restaurantRepository.existsById(idRestaurant)) {
-            queueImg.insert(imgUrl);
-            return ResponseEntity.status(200).build();
-        }
-        return ResponseEntity.status(404).build();
-    }
-
-    @PostMapping("/executeImgQueue/{idRestaurant}")
-    public ResponseEntity executeImgQueue(@RequestBody ImgUrl imgUrl, @PathVariable Integer idRestaurant) {
-        if (restaurantRepository.existsById(idRestaurant)) {
-            Restaurant restaurant = restaurantRepository.getById(idRestaurant);
-            for (int i = 0; i < queueImg.queueSize(); i++) {
-                restaurant.setImgUrl(queueImg.poll().toString());
-                restaurantRepository.save(restaurant);
-            }
-            queueImg.clearQueue();
-            imgUrl.setSize(0);
-            return ResponseEntity.status(200).build();
-        }
-        return ResponseEntity.status(404).build();
-    }
+//    @PostMapping("/registerImgInQueue/{idRestaurant}")
+//    public ResponseEntity registerImgInQueue(@RequestBody ImgUrl imgUrl, @PathVariable Integer idRestaurant) {
+//        if (restaurantRepository.existsById(idRestaurant)) {
+//            queueImg.insert(imgUrl);
+//            return ResponseEntity.status(200).build();
+//        }
+//        return ResponseEntity.status(404).build();
+//    }
+//
+//    @PostMapping("/executeImgQueue/{idRestaurant}")
+//    public ResponseEntity executeImgQueue(@RequestBody ImgUrl imgUrl, @PathVariable Integer idRestaurant) {
+//        if (restaurantRepository.existsById(idRestaurant)) {
+//            Restaurant restaurant = restaurantRepository.getById(idRestaurant);
+//            for (int i = 0; i < queueImg.queueSize(); i++) {
+//                restaurant.setImgUrl(queueImg.poll().toString());
+//                restaurantRepository.save(restaurant);
+//            }
+//            queueImg.clearQueue();
+//            imgUrl.setSize(0);
+//            return ResponseEntity.status(200).build();
+//        }
+//        return ResponseEntity.status(404).build();
+//    }
 
     @GetMapping("/getRestaurantById/{idRestaurant}")
     public ResponseEntity<Optional<Restaurant>> getRestaurantById(@PathVariable Integer idRestaurant) {
