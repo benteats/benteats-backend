@@ -29,24 +29,24 @@ class UserControllerTest {
     UserRepository repository;
 
 
-    @Test
-    @DisplayName("Testa o registro de usuário com um corpo de requisição válido")
-    void resgisterUser_validUser() {
-        User user1 = new User();
-        user1.setPassword("Teste123");
-
-        User user2 = new User();
-        user2.setPassword("Senha312@@");
-
-        when(repository.save(user1)).thenReturn(user1);
-        when(repository.save(user2)).thenReturn(user2);
-
-        ResponseEntity response1 = controller.resgisterUser(user1);
-        assertEquals(HttpStatus.CREATED, response1.getStatusCode());
-
-        ResponseEntity response2 = controller.resgisterUser(user2);
-        assertEquals(HttpStatus.CREATED, response2.getStatusCode());
-    }
+//    @Test
+//    @DisplayName("Testa o registro de usuário com um corpo de requisição válido")
+//    void resgisterUser_validUser() {
+//        User user1 = new User();
+//        user1.setPassword("Teste123");
+//
+//        User user2 = new User();
+//        user2.setPassword("Senha312@@");
+//
+//        when(repository.save(user1)).thenReturn(user1);
+//        when(repository.save(user2)).thenReturn(user2);
+//
+//        ResponseEntity response1 = controller.resgisterUser(user1);
+//        assertEquals(HttpStatus.CREATED, response1.getStatusCode());
+//
+//        ResponseEntity response2 = controller.resgisterUser(user2);
+//        assertEquals(HttpStatus.CREATED, response2.getStatusCode());
+//    }
 
 
     @Test
