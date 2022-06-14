@@ -38,6 +38,8 @@ public class JWTConfiguration extends WebSecurityConfigurerAdapter {
         http.cors().configurationSource(corsConfigurationSource()).and().csrf().disable().authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/login").permitAll()
                 .antMatchers(HttpMethod.POST, "/users/registerUser").permitAll()
+                .antMatchers(HttpMethod.POST, "/restaurants/{\\d+}").permitAll()
+                .antMatchers(HttpMethod.POST, "/images/**").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()

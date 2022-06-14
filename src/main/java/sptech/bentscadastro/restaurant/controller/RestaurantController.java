@@ -11,6 +11,7 @@ import sptech.bentscadastro.restaurant.entity.Restaurant;
 import sptech.bentscadastro.restaurant.form.ImgUrl;
 import sptech.bentscadastro.restaurant.form.RestaurantUpdateForm;
 import sptech.bentscadastro.restaurant.repository.RestaurantRepository;
+import sptech.bentscadastro.user.DTO.UserDetailDTO;
 import sptech.bentscadastro.user.entity.User;
 import sptech.bentscadastro.user.repository.UserRepository;
 
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/restaurants")
 public class RestaurantController {
 
@@ -37,7 +39,7 @@ public class RestaurantController {
             User restaurantUser = userRepository.findByIdUser(idUser);
             newRestaurant.setUser(restaurantUser);
             restaurantRepository.save(newRestaurant);
-            return ResponseEntity.status(201).build();
+            return ResponseEntity.status(201).body(newRestaurant.getIdRestaurant());
         }
         return ResponseEntity.status(404).build();
     }
@@ -162,8 +164,7 @@ public class RestaurantController {
         List<RestaurantDTO> res;
         if (restaurantRepository.existsById(idRestaurant)) {
             res = restaurantRepository.findHistoricStack(idRestaurant);
-//            stack.push(res);
-            stack.push(res.get(idRestaurant).getIdRestaurant());
+            stack.push(res);
             return ResponseEntity.status(200).build();
         }
         return ResponseEntity.status(204).build();
@@ -180,6 +181,16 @@ public class RestaurantController {
     @GetMapping("/getStackSize")
     public ResponseEntity getStackSize() {
         return ResponseEntity.status(200).body(stack.getSize());
+    }
+
+    @GetMapping("/getIdRestaurantByIdUser/{idUser}")
+    public ResponseEntity<Integer> getIdRestaurantByIdUser(@PathVariable Integer idUser) {
+        if (userRepository.existsById(idUser)) {
+            Integer idRestaurant = restaurantRepository.findIdRestaurantByIdUser(idUser);
+            return ResponseEntity.status(200).body(idRestaurant);
+        }
+
+        return ResponseEntity.status(404).build();
     }
 
 }
