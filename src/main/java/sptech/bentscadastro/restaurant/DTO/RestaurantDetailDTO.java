@@ -21,5 +21,5 @@ public interface RestaurantDetailDTO {
 
     Float getLng();
 
-    String getImgUrl();
+    byte[] getImgUrl();
 }

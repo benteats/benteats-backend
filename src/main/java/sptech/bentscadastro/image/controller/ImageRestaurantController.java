@@ -49,6 +49,7 @@ public class ImageRestaurantController {
             UpdateImageRestaurantForm newImage = new UpdateImageRestaurantForm(content);
 
             restaurant.setImgUrl(content);
+            restaurantRepository.save(restaurant);
             imgRestaurant.setImage(content);
             imgRestaurant.setRestaurant(restaurant);
 
