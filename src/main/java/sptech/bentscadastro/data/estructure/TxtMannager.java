@@ -194,9 +194,12 @@ public class TxtMannager {
 
         while (!stackUser.isEmpty() || !stackRestaurant.isEmpty()) {
 
-            queueList.insert(stackUser.pop());
-            queueList.insert(stackRestaurant.pop());
-
+            if (!stackUser.isEmpty()) {
+                queueList.insert(stackUser.pop());
+            }
+            if (!stackRestaurant.isEmpty()) {
+                queueList.insert(stackRestaurant.pop());
+            }
         }
 
         return queueList;
