@@ -94,7 +94,7 @@ public class MenuFoodController {
 
             String filePath = pathFinder.saveArchive(filename.getOriginalFilename(), filename);
 
-            List<MenuFood> listFood = mannager.txtReaderMenuFood("Bents-txt-files/" + filePath);
+            List<MenuFood> listFood = mannager.txtReaderMenuFood("Read-Files/" + filePath);
 
             this.registerListMenuFood(idRestaurant, listFood);
             return ResponseEntity.status(201).build();

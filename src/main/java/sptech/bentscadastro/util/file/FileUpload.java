@@ -27,7 +27,7 @@ public class FileUpload {
             throw new IOException("Could not save file: " + fileName, ioe);
         }
 
-        String filePath = "Bents-File" + "-" + fileName;
+        String filePath = "Bents-txt-files" + "-" + fileName;
 
         return filePath;
     }

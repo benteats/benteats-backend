@@ -3,8 +3,10 @@ package sptech.bentscadastro.restaurant.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import sptech.bentscadastro.data.estructure.Queue;
 import sptech.bentscadastro.data.estructure.Stack;
+import sptech.bentscadastro.data.estructure.TxtMannager;
 import sptech.bentscadastro.restaurant.DTO.RestaurantDTO;
 import sptech.bentscadastro.restaurant.DTO.RestaurantDetailDTO;
 import sptech.bentscadastro.restaurant.entity.Restaurant;
@@ -13,8 +15,10 @@ import sptech.bentscadastro.restaurant.form.RestaurantUpdateForm;
 import sptech.bentscadastro.restaurant.repository.RestaurantRepository;
 import sptech.bentscadastro.user.entity.User;
 import sptech.bentscadastro.user.repository.UserRepository;
+import sptech.bentscadastro.util.file.FileUpload;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -192,4 +196,39 @@ public class RestaurantController {
         return ResponseEntity.status(404).build();
     }
 
+    @PostMapping(value = "/fileReader", consumes = { "multipart/form-data" })
+    public ResponseEntity<Void> txtUserReader(@RequestParam MultipartFile filename) throws IOException {
+
+        TxtMannager mannager = new TxtMannager();
+        FileUpload pathFinder = new FileUpload();
+
+        String filePath = pathFinder.saveArchive(filename.getOriginalFilename(), filename);
+
+        Queue listUsers = mannager.txtReaderNewUser("Read-Files/" + filePath);
+
+        this.registerListMenuFood(listUsers);
+        return ResponseEntity.status(201).build();
+
+    }
+
+    @PostMapping("/registerUserList")
+    public ResponseEntity<Void> registerListMenuFood(@RequestBody Queue listUsers) {
+
+        while (!listUsers.isEmpty()) {
+
+            User user = (User) listUsers.poll();
+
+            Restaurant restaurant = (Restaurant) listUsers.poll();
+
+            userRepository.save(user);
+
+            restaurant.setUser(user);
+
+            restaurantRepository.save(restaurant);
+        }
+
+        return ResponseEntity.status(201).build();
+
+
+    }
 }
