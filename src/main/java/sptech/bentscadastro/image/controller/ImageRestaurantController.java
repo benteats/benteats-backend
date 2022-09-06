@@ -66,6 +66,9 @@ public class ImageRestaurantController {
 
     @PostMapping(value = "saveImage/{idRestaurant}", consumes = "multipart/form-data")
     public ResponseEntity registerImageByIdRestaurant(@RequestParam MultipartFile[] imgs, @PathVariable Integer idRestaurant) throws IOException {
+        Restaurant restaurant = restaurantRepository.findByIdRestaurant(idRestaurant);
+        restaurant.setImgUrl(imgs[0].getBytes());
+        restaurantRepository.save(restaurant);
         if (restaurantRepository.existsById(idRestaurant)) {
             for (MultipartFile img : imgs) {
                 ImageRestaurant imageRestaurant = new ImageRestaurant();
