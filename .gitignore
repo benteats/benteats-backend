@@ -1,7 +1,2 @@
 ## target folder at the top level of the project structue and paths and contents underneath it
-target/
-target/*
-
-## target folder at any level of the project structue
 **/target
-/target
