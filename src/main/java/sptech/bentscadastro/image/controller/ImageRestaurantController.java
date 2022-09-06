@@ -2,7 +2,10 @@ package sptech.bentscadastro.image.controller;
 
 import feign.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.MultipartConfigFactory;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.unit.DataSize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import sptech.bentscadastro.data.estructure.Queue;
@@ -15,6 +18,7 @@ import sptech.bentscadastro.restaurant.entity.Restaurant;
 import sptech.bentscadastro.restaurant.form.ImgUrl;
 import sptech.bentscadastro.restaurant.repository.RestaurantRepository;
 
+import javax.servlet.MultipartConfigElement;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -61,7 +65,7 @@ public class ImageRestaurantController {
     }
 
     @PostMapping(value = "saveImage/{idRestaurant}", consumes = "multipart/form-data")
-    public ResponseEntity registerImageByIdRestaurant(@RequestParam ArrayList<MultipartFile> imgs, @PathVariable Integer idRestaurant) throws IOException {
+    public ResponseEntity registerImageByIdRestaurant(@RequestParam MultipartFile[] imgs, @PathVariable Integer idRestaurant) throws IOException {
         if (restaurantRepository.existsById(idRestaurant)) {
             for (MultipartFile img : imgs) {
                 ImageRestaurant imageRestaurant = new ImageRestaurant();
