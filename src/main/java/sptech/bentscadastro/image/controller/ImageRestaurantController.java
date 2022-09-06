@@ -60,6 +60,22 @@ public class ImageRestaurantController {
         return ResponseEntity.status(404).build();
     }
 
+    @PostMapping(value = "saveImage/{idRestaurant}", consumes = "multipart/form-data")
+    public ResponseEntity registerImageByIdRestaurant(@RequestParam ArrayList<MultipartFile> imgs, @PathVariable Integer idRestaurant) throws IOException {
+        if (restaurantRepository.existsById(idRestaurant)) {
+            for (MultipartFile img : imgs) {
+                ImageRestaurant imageRestaurant = new ImageRestaurant();
+                imageRestaurant.setImage(img.getBytes());
+                imageRestaurant.setRestaurant(restaurantRepository.findByIdRestaurant(idRestaurant));
+                imageRestaurantRepository.save(imageRestaurant);
+            }
+
+            return ResponseEntity.status(200).build();
+        }
+
+        return ResponseEntity.status(404).build();
+    }
+
     @PostMapping("/executeImageStack")
     public ResponseEntity executeImageQueue() {
 
