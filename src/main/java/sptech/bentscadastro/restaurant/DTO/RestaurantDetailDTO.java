@@ -17,6 +17,8 @@ public interface RestaurantDetailDTO {
 
     String getDescription();
 
+    Double getRatingAverage();
+
     Float getLat();
 
     Float getLng();
