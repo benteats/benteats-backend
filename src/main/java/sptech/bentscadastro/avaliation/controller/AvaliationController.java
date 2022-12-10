@@ -35,6 +35,13 @@ public class AvaliationController {
             newAvaliation.setUser(user);
             newAvaliation.setRestaurant(restaurant);
             avaliationRepository.save(newAvaliation);
+
+            Double sumRatingAvaliation = avaliationRepository.getSumRatingAvaliation(restaurant.getIdRestaurant());
+            Long avaliationRecords = avaliationRepository.count();
+            Double ratingAverage = (sumRatingAvaliation / avaliationRecords);
+
+            restaurantRepository.updateRatingAverage(ratingAverage, restaurant.getIdRestaurant());
+
             return ResponseEntity.status(201).build();
         }
 
