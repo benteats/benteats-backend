@@ -26,4 +26,7 @@ public interface AvaliationRepository extends JpaRepository<Avaliation, Integer>
     @Modifying
     @Query("update Avaliation a set a.comment = ?2 where a.idAvaliation = ?1")
     void updateCommentById(Integer idAvaliation, String value);
+
+    @Query("select sum(rating) from Avaliation a where a.restaurant.idRestaurant = ?1")
+    Double getSumRatingAvaliation(Integer idRestaurant);
 }
