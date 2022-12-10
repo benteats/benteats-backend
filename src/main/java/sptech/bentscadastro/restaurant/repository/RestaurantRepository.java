@@ -50,6 +50,11 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
     @Query("update Restaurant r set r.user.isLogged = true where r.user.email = ?1 or r.user.phone = ?1 and r.user.password = ?2")
     void loginUser(String login, String password);
 
+    @Transactional
+    @Modifying
+    @Query("update Restaurant r set r.ratingAverage = ?1 where r.idRestaurant = ?2")
+    void updateRatingAverage(Double ratingAverage, Integer idRestaurant);
+
     String HAVERSINE_FORMULA = "(6371 * acos(cos(radians(:lat)) * cos(radians(r.user.lat)) *" +
             " cos(radians(r.user.lng) - radians(:lng)) + sin(radians(:lat)) * sin(radians(r.user.lat))))";
     @Query("SELECT r.idRestaurant as id," +
@@ -60,6 +65,7 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
             "r.priceAverage as priceAverage," +
             "r.openingTime as openingTime," +
             "r.description as description," +
+            "r.ratingAverage as ratingAverage," +
             "r.user.lat as lat," +
             "r.user.lng as lng," +
             "r.imgUrl as imgUrl FROM Restaurant r WHERE " + HAVERSINE_FORMULA + " < :distance ORDER BY "+ HAVERSINE_FORMULA + " DESC")
