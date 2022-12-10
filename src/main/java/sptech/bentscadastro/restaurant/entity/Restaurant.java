@@ -21,6 +21,9 @@ public class Restaurant {
     private String closingTime;
     @NotNull
     private String description;
+
+    private Double ratingAverage;
+    
     @ManyToOne
     @JoinColumn(name = "idUser", referencedColumnName = "idUser", nullable = false)
     private User user;
@@ -90,4 +93,8 @@ public class Restaurant {
     public void setImgUrl(byte[] imgUrl) {
         this.imgUrl = imgUrl;
     }
+
+    public Double getRatingAverage() { return ratingAverage; }
+
+    public void setRatingAverage(Double ratingAverage) { this.ratingAverage = ratingAverage; }
 }
