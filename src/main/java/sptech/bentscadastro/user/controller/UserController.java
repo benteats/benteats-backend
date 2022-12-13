@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import sptech.bentscadastro.data.estructure.Stack;
 import sptech.bentscadastro.user.DTO.UserDetailDTO;
 import sptech.bentscadastro.user.entity.User;
+import sptech.bentscadastro.user.form.LoginUserForm;
 import sptech.bentscadastro.user.form.UpdatePasswordForm;
 import sptech.bentscadastro.user.form.UpdateUserForm;
 import sptech.bentscadastro.user.repository.UserRepository;
@@ -123,6 +124,28 @@ public class UserController {
         }
 
         return ResponseEntity.status(404).build();
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<Boolean> loginUser(@RequestBody LoginUserForm loginUserForm) {
+        User user = new User();
+
+        if (userRepository.existsByEmail(loginUserForm.getLogin())) {
+            user = userRepository.findByEmail(loginUserForm.getLogin());
+            if (getPasswordEncoder().matches(loginUserForm.getPassword(), user.getPassword())) {
+                return ResponseEntity.status(200).body(true);
+            }
+        }
+
+        if (userRepository.existsByPhone(loginUserForm.getLogin())) {
+            if (getPasswordEncoder().matches(loginUserForm.getPassword(), user.getPassword())) {
+                user = userRepository.findByPhone(loginUserForm.getLogin());
+                if (getPasswordEncoder().matches(loginUserForm.getPassword(), user.getPassword())) {
+                    return ResponseEntity.status(200).body(true);
+                }
+            }
+        }
+        return ResponseEntity.status(404).body(false);
     }
 
 }

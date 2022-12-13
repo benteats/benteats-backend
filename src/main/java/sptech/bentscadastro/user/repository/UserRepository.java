@@ -101,9 +101,11 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
 //    User findByPhone(String login);
 
-    Optional<User> findByEmail(String username);
+    User findByEmail(String username);
 
-    Optional<User> findByPhone(String username);
+
+
+    User findByPhone(String username);
 
     @Transactional
     @Modifying
