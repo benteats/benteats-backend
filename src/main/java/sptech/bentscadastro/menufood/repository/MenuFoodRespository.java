@@ -25,4 +25,6 @@ public interface MenuFoodRespository extends JpaRepository<MenuFood, Integer> {
     @Modifying
     @Query("update MenuFood m set m.description = ?2 where m.idFood = ?1")
     void updateDescriptionItemById(Integer idFood, String value);
+
+    MenuFood findByIdFood(Integer idFood);
 }
