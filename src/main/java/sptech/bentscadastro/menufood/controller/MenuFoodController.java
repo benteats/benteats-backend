@@ -14,6 +14,7 @@ import sptech.bentscadastro.restaurant.repository.RestaurantRepository;
 import sptech.bentscadastro.util.file.FileUpload;
 
 import javax.persistence.criteria.CriteriaBuilder;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -28,12 +29,24 @@ public class MenuFoodController {
     @Autowired
     RestaurantRepository restaurantRepository;
 
-    @PostMapping("/{idRestaurant}")
-    public ResponseEntity<Void> registerItemInMenuFood(@RequestBody MenuFood newItem, @PathVariable Integer idRestaurant) {
+    @PostMapping(value = "/{idRestaurant}")
+    public ResponseEntity<Integer> registerItemInMenuFood(@RequestBody MenuFood newItem, @PathVariable Integer idRestaurant){
         if (restaurantRepository.existsById(idRestaurant)) {
             Restaurant restaurant = restaurantRepository.findByIdRestaurant(idRestaurant);
             newItem.setRestaurant(restaurant);
             menuFoodRespository.save(newItem);
+            return ResponseEntity.status(201).body(newItem.getIdFood());
+        }
+
+        return ResponseEntity.status(404).build();
+    }
+
+    @PostMapping(value = "/uploadImage/{idFood}", consumes = "multipart/form-data")
+    public ResponseEntity<Void> uploadFoodImage(@RequestParam MultipartFile foodImage, @PathVariable Integer idFood) throws IOException {
+        if (menuFoodRespository.existsById(idFood)) {
+            MenuFood food = menuFoodRespository.findByIdFood(idFood);
+            food.setImage(foodImage.getBytes());
+            menuFoodRespository.save(food);
             return ResponseEntity.status(201).build();
         }
 
