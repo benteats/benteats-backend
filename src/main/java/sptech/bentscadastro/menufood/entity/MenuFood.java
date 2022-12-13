@@ -20,9 +20,19 @@ public class MenuFood {
     @Size(min = 3, max = 200)
     private String description;
 
+    private byte[] image;
+
     @ManyToOne
     @JoinColumn(name = "idRestaurant", referencedColumnName = "idRestaurant", nullable = false)
     private Restaurant restaurant;
+
+    public byte[] getImage() {
+        return image;
+    }
+
+    public void setImage(byte[] image) {
+        this.image = image;
+    }
 
     public Integer getIdFood() {
         return idFood;
