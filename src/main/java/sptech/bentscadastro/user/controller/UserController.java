@@ -127,13 +127,13 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Boolean> loginUser(@RequestBody LoginUserForm loginUserForm) {
+    public ResponseEntity<Integer> loginUser(@RequestBody LoginUserForm loginUserForm) {
         User user = new User();
 
         if (userRepository.existsByEmail(loginUserForm.getLogin())) {
             user = userRepository.findByEmail(loginUserForm.getLogin());
             if (getPasswordEncoder().matches(loginUserForm.getPassword(), user.getPassword())) {
-                return ResponseEntity.status(200).body(true);
+                return ResponseEntity.status(200).body(user.getIdUser());
             }
         }
 
@@ -141,11 +141,11 @@ public class UserController {
             if (getPasswordEncoder().matches(loginUserForm.getPassword(), user.getPassword())) {
                 user = userRepository.findByPhone(loginUserForm.getLogin());
                 if (getPasswordEncoder().matches(loginUserForm.getPassword(), user.getPassword())) {
-                    return ResponseEntity.status(200).body(true);
+                    return ResponseEntity.status(200).body(user.getIdUser());
                 }
             }
         }
-        return ResponseEntity.status(404).body(false);
+        return ResponseEntity.status(404).body(-1);
     }
 
 }
