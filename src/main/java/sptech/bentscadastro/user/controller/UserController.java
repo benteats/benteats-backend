@@ -7,6 +7,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import sptech.bentscadastro.data.estructure.Stack;
+import sptech.bentscadastro.user.DTO.LoginDTO;
 import sptech.bentscadastro.user.DTO.UserDetailDTO;
 import sptech.bentscadastro.user.entity.User;
 import sptech.bentscadastro.user.form.LoginUserForm;
@@ -127,13 +128,15 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Integer> loginUser(@RequestBody LoginUserForm loginUserForm) {
+    public ResponseEntity<LoginDTO> loginUser(@RequestBody LoginUserForm loginUserForm) {
         User user = new User();
-
+        LoginDTO loginDTO = new LoginDTO();
+        loginDTO.setIdUser(-1);
         if (userRepository.existsByEmail(loginUserForm.getLogin())) {
             user = userRepository.findByEmail(loginUserForm.getLogin());
             if (getPasswordEncoder().matches(loginUserForm.getPassword(), user.getPassword())) {
-                return ResponseEntity.status(200).body(user.getIdUser());
+                loginDTO.setIdUser(user.getIdUser());
+                return ResponseEntity.status(200).body(loginDTO);
             }
         }
 
@@ -141,11 +144,13 @@ public class UserController {
             if (getPasswordEncoder().matches(loginUserForm.getPassword(), user.getPassword())) {
                 user = userRepository.findByPhone(loginUserForm.getLogin());
                 if (getPasswordEncoder().matches(loginUserForm.getPassword(), user.getPassword())) {
-                    return ResponseEntity.status(200).body(user.getIdUser());
+                    loginDTO.setIdUser(user.getIdUser());
+                    return ResponseEntity.status(200).body(loginDTO);
                 }
             }
         }
-        return ResponseEntity.status(404).body(-1);
+
+        return ResponseEntity.status(404).body(loginDTO);
     }
 
 }

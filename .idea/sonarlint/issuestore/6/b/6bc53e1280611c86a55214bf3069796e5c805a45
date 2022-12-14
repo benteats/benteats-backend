@@ -1,0 +1,19 @@
+
+D
+java:S3740:"/Provide the parametrized type for this generic.(Õ£^
+D
+java:S3740R"/Provide the parametrized type for this generic.(áÿÜ,
+E
+java:S3740\"/Provide the parametrized type for this generic.(ºİüµ
+K
+java:S1066"/Merge this if statement with the enclosing one.(àü«âùÿÿÿÿ
+u
+java:S1488 "_Immediately return this expression instead of assigning it to the temporary variable "encoder".(œÿÔÚ
+^
+java:S3655n"HCall "user.isPresent()" or "!user.isEmpty()" before accessing the value.(ùóÛÅ
+V
+java:S4684%"@Replace this persistent entity with a simple POJO or DTO object.(šŠäİ
+d
+java:S1128	"GRemove this unused import 'sptech.bentscadastro.data.estructure.Stack'.(’ë¤‹8ä¢ÉêĞ0
+g
+java:S1128"JRemove this unused import 'sptech.bentscadastro.user.form.UpdateUserForm'.(÷ªøì8ä¢ÉêĞ0
